@@ -1,3 +1,7 @@
+# IDE files (not in the original)
+.idea/
+.vscode/
+
 # Visual Studio 2015 user specific files
 .vs/
 
@@ -73,3 +77,8 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Your remote asset storage - ignore local copies
+Content/**
+!Content/Developers/
+!Content/Developers/**
