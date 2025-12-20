@@ -4,7 +4,7 @@
 #include "BaseCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "AttributeSetBase.h"
+#include "CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -27,7 +27,7 @@ ABaseCharacter::ABaseCharacter()
 
 	// Ability System
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AttributeSet = CreateDefaultSubobject<UAttributeSetBase>(TEXT("AttributeSet"));
+	AttributeSet = CreateDefaultSubobject<UCoreAttributeSet>(TEXT("AttributeSet"));
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "AttributeSetBase.generated.h"
+#include "CoreAttributeSet.generated.h"
 
 // Macro to automatically generate boilerplate for attributes (Getter, Setter, Init)
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -15,25 +15,25 @@ GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 UCLASS()
-class NEONGRID_API UAttributeSetBase : public UAttributeSet
+class NEONGRID_API UCoreAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 
 public:
-	UAttributeSetBase();
+	UCoreAttributeSet();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UAttributeSetBase, Health);
+	ATTRIBUTE_ACCESSORS(UCoreAttributeSet, Health);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UAttributeSetBase, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UCoreAttributeSet, MaxHealth);
 
 	// Meta-attribute for damage handling
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Damage;
-	ATTRIBUTE_ACCESSORS(UAttributeSetBase, Damage);
+	ATTRIBUTE_ACCESSORS(UCoreAttributeSet, Damage);
 	
 	// This handles logic like clamping Health between 0 and MaxHealth when it changes
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;

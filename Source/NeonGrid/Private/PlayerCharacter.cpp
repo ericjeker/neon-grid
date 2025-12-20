@@ -19,8 +19,8 @@ APlayerCharacter::APlayerCharacter()
 	// Create Camera Boom (spring arm)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 800.0f;
-	CameraBoom->SetRelativeRotation(FRotator(-70.0f, 0.0f, 0.0f));
+	CameraBoom->TargetArmLength = 1600.0f;
+	CameraBoom->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
 	// Camera is not zooming in when it hits an object
 	CameraBoom->bDoCollisionTest = false;
 	// Fixed angle, doesn't follow character rotation

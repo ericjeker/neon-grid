@@ -1,14 +1,14 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "AttributeSetBase.h"
+#include "CoreAttributeSet.h"
 #include "GameplayEffectExtension.h"
 
-UAttributeSetBase::UAttributeSetBase() : Health(100.f), MaxHealth(100.f)
+UCoreAttributeSet::UCoreAttributeSet() : Health(100.f), MaxHealth(100.f)
 {
 }
 
-void UAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UCoreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
@@ -18,7 +18,7 @@ void UAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 }
 
-void UAttributeSetBase::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 

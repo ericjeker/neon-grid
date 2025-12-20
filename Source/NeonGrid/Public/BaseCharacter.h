@@ -18,7 +18,7 @@ public:
 	ABaseCharacter();
 
 	// IAbilitySystemInterface implementation
-	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,10 +32,10 @@ protected:
 	 */
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
-	class UAbilitySystemComponent* AbilitySystemComponent;
+	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
-	class UAttributeSetBase* AttributeSet;
+	class UCoreAttributeSet* AttributeSet;
 	
 public:
 	// Called every frame
