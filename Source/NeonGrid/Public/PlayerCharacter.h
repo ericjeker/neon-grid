@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* FireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* LookAction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float FireRate = 0.3f;
 
@@ -54,6 +57,7 @@ public:
 	 */
 	
 	void Move(const FInputActionValue& InputActionValue);
+	void Look(const FInputActionValue& InputActionValue);
 	void Fire();
 
 protected:

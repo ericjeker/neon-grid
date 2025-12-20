@@ -69,6 +69,27 @@ void APlayerCharacter::Tick(const float DeltaTime)
 
 	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
+		bool bIsUsingGamepad = false;
+
+		// Only use mouse rotation if no gamepad input is detected
+		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
+		{
+			if (LookAction)
+			{
+				const FVector2D LookValue = EnhancedInputComponent->GetBoundActionValue(LookAction).Get<FVector2D>();
+				if (LookValue.SizeSquared() > 0.1f)
+				{
+					bIsUsingGamepad = true;
+				}
+			}
+		}
+
+		// Only use mouse rotation if the gamepad is idle
+		if (bIsUsingGamepad)
+		{
+			return;
+		}
+
 		// This draws a straight line from the camera to the 3D world
 		if (FHitResult TraceHitResult; PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, TraceHitResult))
 		{
@@ -78,13 +99,10 @@ void APlayerCharacter::Tick(const float DeltaTime)
 			// We don't need the Z axis
 			LookDir.Z = 0.0f;
 
-			if (LookDir.IsNearlyZero())
+			if (!LookDir.IsNearlyZero())
 			{
-				return;
+				SetActorRotation(LookDir.Rotation());
 			}
-
-			const FRotator LookAtRotation = LookDir.Rotation();
-			SetActorRotation(LookAtRotation);
 		}
 	}
 }
@@ -97,6 +115,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 		// TODO: Replace this with AbilitySystemComponent.TryActivateAbilityByTag
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 	}
@@ -127,6 +146,19 @@ void APlayerCharacter::Move(const FInputActionValue& InputActionValue)
 	AddMovementInput(RightDirection, MovementVector.X);
 }
 
+void APlayerCharacter::Look(const FInputActionValue& InputActionValue)
+{
+	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+
+	if (LookAxisVector.IsNearlyZero())
+	{
+		return;
+	}
+
+	const FRotator LookAtRotation = FVector(LookAxisVector.Y, LookAxisVector.X, 0.0f).Rotation();
+	SetActorRotation(LookAtRotation);
+}
+
 // TODO: move this to a FireProjectile ability
 void APlayerCharacter::Fire()
 {
@@ -151,4 +183,3 @@ void APlayerCharacter::Fire()
 		GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
 }
-
