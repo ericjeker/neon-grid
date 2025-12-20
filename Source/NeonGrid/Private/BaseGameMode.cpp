@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
 #include "NeonGrid/Public/BaseGameMode.h"

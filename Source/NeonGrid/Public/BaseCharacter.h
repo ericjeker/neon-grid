@@ -1,14 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "InputActionValue.h"
+#include "AbilitySystemInterface.h"
+
 #include "BaseCharacter.generated.h"
 
 UCLASS()
-class NEONGRID_API ABaseCharacter : public ACharacter
+class NEONGRID_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -16,28 +17,30 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
+	// IAbilitySystemInterface implementation
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class USpringArmComponent* CameraBoom;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UCameraComponent* FollowCamera;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputMappingContext* DefaultMappingContext;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* MoveAction;
 
-public:	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<class ABaseProjectile> ProjectileClass;
+
+	/**
+	 * Ability System
+	 */
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
+	class UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY()
+	class UAttributeSetBase* AttributeSet;
+	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	void Move(const FInputActionValue& InputActionValue);
 };
