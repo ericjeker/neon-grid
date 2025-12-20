@@ -97,6 +97,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		// TODO: Replace this with AbilitySystemComponent.TryActivateAbilityByTag
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 	}
 }
@@ -126,6 +127,7 @@ void APlayerCharacter::Move(const FInputActionValue& InputActionValue)
 	AddMovementInput(RightDirection, MovementVector.X);
 }
 
+// TODO: move this to a FireProjectile ability
 void APlayerCharacter::Fire()
 {
 	if (ProjectileClass)

@@ -19,3 +19,10 @@ Prefix C++ classes with standard Unreal prefixes (A for Actors, U for Components
 * `/Content/Characters/Hero`: Specific BP subclasses.
 * `/Content/Levels`: Levels
 
+## Synchronize Content
+
+Assuming `D:\` is the external drive.
+
+```powershell
+.\Scripts\SyncContent.ps1 -SourcePath .\Content -Destination "D:\Unreal\NeonGrid\Content" -ShowProgress
+```

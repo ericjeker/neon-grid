@@ -67,6 +67,7 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 		return;
 	}
 
+	// Check if the OtherActor is speaking GAS
 	IAbilitySystemInterface* AbilityInterface = Cast<IAbilitySystemInterface>(OtherActor);
 	if (!AbilityInterface)
 	{
@@ -80,12 +81,12 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 		Destroy();
 		return;
 	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("Projectile hit: %s"), OtherActor ? *OtherActor->GetName() : TEXT("None"));
 
+	// Create the effect context, add the instigator and outgoing specs
 	FGameplayEffectContextHandle EffectContext = TargetASC->MakeEffectContext();
 	EffectContext.AddInstigator(GetInstigator(), this);
 
+	// Depending on the projectile type, the damage effect class can be different
 	FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(DamageEffectClass, 1.0f, EffectContext);
 	if (SpecHandle.IsValid())
 	{
