@@ -1,7 +1,7 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "NeonGrid/Public/BasePlayerController.h"
+#include "Gameplay/BasePlayerController.h"
 
 ABasePlayerController::ABasePlayerController()
 {

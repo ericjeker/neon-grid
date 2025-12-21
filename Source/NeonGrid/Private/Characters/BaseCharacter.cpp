@@ -1,10 +1,9 @@
 // Copyright Eric Jeker, Inc. All Rights Reserved.
 
-
-#include "BaseCharacter.h"
+#include "Characters/BaseCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "CoreAttributeSet.h"
+#include "GAS/CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values

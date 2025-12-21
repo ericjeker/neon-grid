@@ -1,7 +1,7 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "BaseProjectile.h"
+#include "Projectiles/BaseProjectile.h"
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"

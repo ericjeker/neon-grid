@@ -10,7 +10,7 @@ public class NeonGrid : ModuleRules
 
 		PublicDependencyModuleNames.AddRange([
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags",
-			"GameplayTasks"
+			"GameplayTasks", "AIModule", "NavigationSystem"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([]);

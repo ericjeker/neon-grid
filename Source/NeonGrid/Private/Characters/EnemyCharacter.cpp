@@ -1,7 +1,9 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "EnemyCharacter.h"
+#include "Characters/EnemyCharacter.h"
+
+#include "AI/NonPlayerController.h"
 
 
 // Sets default values
@@ -9,9 +11,16 @@ AEnemyCharacter::AEnemyCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	// Automatically add a non-player controller to the character
+	AIControllerClass = ANonPlayerController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
-// Called when the game starts or when spawned
+/**
+ * Called when the game starts or when spawned
+ * Initializes the character and its AI controller.
+ */
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();

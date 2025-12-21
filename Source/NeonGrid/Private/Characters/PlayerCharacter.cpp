@@ -1,9 +1,9 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "PlayerCharacter.h"
+#include "Characters/PlayerCharacter.h"
 
-#include "BaseProjectile.h"
+#include "Projectiles/BaseProjectile.h"
 #include "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
