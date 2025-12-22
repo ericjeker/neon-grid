@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName ShouldPatrolFromOriginKeyName = TEXT("ShouldPatrolFromOrigin");
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetActorKeyName = TEXT("TargetActor");
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	UAIPerceptionComponent* AIPerceptionComponent;
 

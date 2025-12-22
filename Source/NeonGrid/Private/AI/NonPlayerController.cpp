@@ -13,7 +13,7 @@ ANonPlayerController::ANonPlayerController()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
@@ -88,7 +88,7 @@ ETeamAttitude::Type ANonPlayerController::GetTeamAttitudeTowards(const AActor& O
 		{
 			return ETeamAttitude::Hostile;
 		}
-		
+
 		return ETeamAttitude::Friendly;
 	}
 
@@ -105,6 +105,9 @@ ETeamAttitude::Type ANonPlayerController::GetTeamAttitudeTowards(const AActor& O
  */
 void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 {
+	UBlackboardComponent* BB = GetBlackboardComponent();
+	if (!BB) { return; }
+
 	if (Stimulus.WasSuccessfullySensed())
 	{
 		// Check our attitude towards the actor
@@ -112,28 +115,33 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 
 		if (Attitude == ETeamAttitude::Hostile)
 		{
+			// Update Blackboard to chase this actor
+			BB->SetValueAsObject(TargetActorKeyName, Actor);
+
 			// Logic for when an ENEMY is seen (Attack, Chase, etc.)
 			UE_LOG(LogTemp, Warning, TEXT("Hostile Detected: %s"), *Actor->GetName());
-			
-			// Example: Update Blackboard to chase this actor
-			if (GetBlackboardComponent())
-			{
-				GetBlackboardComponent()->SetValueAsObject(TEXT("TargetActor"), Actor);
-			}
 		}
 		else if (Attitude == ETeamAttitude::Friendly)
 		{
 			// Logic for when a FRIEND is seen (Heal, Follow, Wave)
 			UE_LOG(LogTemp, Log, TEXT("Hello, friend: %s"), *Actor->GetName());
-		} else
+		}
+		else
 		{
 			UE_LOG(LogTemp, Log, TEXT("Just a random: %s"), *Actor->GetName());
 		}
 	}
 	else
 	{
-		// Logic for when the player is lost
-		UE_LOG(LogTemp, Warning, TEXT("Lost track of target."));
+		const AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(TargetActorKeyName));
+		UE_LOG(LogTemp, Warning, TEXT("Lost track of Target: %s"), *CurrentTarget->GetName());
+		
+		// We lost sight of a target. Was it our current target?
+		if (CurrentTarget == Actor)
+		{
+			// We lost the actual target we were chasing. Clear the value.
+			BB->SetValueAsObject(TargetActorKeyName, nullptr);
+		}
 	}
 }
 
