@@ -16,6 +16,12 @@ class NEONGRID_API ABaseCharacter : public ACharacter, public IAbilitySystemInte
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
+	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	// IAbilitySystemInterface implementation
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -27,20 +33,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TSubclassOf<class ABaseProjectile> ProjectileClass;
 
-	/**
-	 * Ability System
-	 */
+	/** Ability System */
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
 	UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY()
 	class UCoreAttributeSet* AttributeSet;
-	
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };

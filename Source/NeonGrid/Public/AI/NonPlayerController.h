@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTreeTypes.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "Runtime/AIModule/Classes/AIController.h"
+
 #include "NonPlayerController.generated.h"
 
 UCLASS()
@@ -31,6 +33,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName ShouldPatrolFromOriginKeyName = TEXT("ShouldPatrolFromOrigin");
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UAIPerceptionComponent* AIPerceptionComponent;
+
+	/** Preception, Sense Configuration, Detection */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	TObjectPtr<class UAISenseConfig_Sight> SightConfig;
+	
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+	
+	UFUNCTION()
+	void OnTargetDetected(AActor* Actor, FAIStimulus Stimulus);
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

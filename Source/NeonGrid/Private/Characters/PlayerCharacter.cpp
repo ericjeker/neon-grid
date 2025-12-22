@@ -9,6 +9,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -45,6 +47,11 @@ APlayerCharacter::APlayerCharacter()
 	CharacterMovementComponent->RotationRate = FRotator(0.0f, 640.0f, 0.0f);
 	CharacterMovementComponent->bConstrainToPlane = true;
 	CharacterMovementComponent->bSnapToPlaneAtStart = true;
+	
+	// Make character discoverable by AI
+	UAIPerceptionStimuliSourceComponent* StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
+	StimuliSource->RegisterForSense(UAISense_Sight::StaticClass());
+	StimuliSource->RegisterWithPerceptionSystem();
 }
 
 // Called when the game starts or when spawned
