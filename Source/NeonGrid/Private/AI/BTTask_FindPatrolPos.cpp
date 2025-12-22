@@ -13,14 +13,22 @@ UBTTask_FindPatrolPos::UBTTask_FindPatrolPos()
 
 EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	APawn* Pawn = OwnerComp.GetAIOwner()->GetPawn();
+	const APawn* Pawn = OwnerComp.GetAIOwner()->GetPawn();
 	if (!Pawn) return EBTNodeResult::Failed;
 
-	UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
+	const UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (!NavSys) return EBTNodeResult::Failed;
 
-	FNavLocation NextLocation;
-	if (NavSys->GetRandomReachablePointInRadius(Pawn->GetActorLocation(), SearchRadius, NextLocation))
+	FVector SearchOrigin = OwnerComp.GetBlackboardComponent()->GetValueAsVector(OriginLocationKey.SelectedKeyName);
+	const bool bUseOriginLocation = OwnerComp.GetBlackboardComponent()->GetValueAsBool(ShouldPatrolFromOriginKey.SelectedKeyName);
+	
+	// If OriginLocation isn't set, or we should not use it, fall back to current
+	if (!bUseOriginLocation || SearchOrigin.IsZero())
+	{
+		SearchOrigin = Pawn->GetActorLocation();
+	}
+
+	if (FNavLocation NextLocation; NavSys->GetRandomReachablePointInRadius(SearchOrigin, SearchRadius, NextLocation))
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsVector(TargetLocationKey.SelectedKeyName, NextLocation.Location);
 		return EBTNodeResult::Succeeded;

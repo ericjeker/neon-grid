@@ -31,7 +31,13 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 	FBlackboardKeySelector TargetLocationKey;
-
+	
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	FBlackboardKeySelector OriginLocationKey;
+	
+	UPROPERTY(EditAnywhere, Category = "Blackboard")
+	FBlackboardKeySelector ShouldPatrolFromOriginKey;
+	
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float SearchRadius = 1000.f;
 };

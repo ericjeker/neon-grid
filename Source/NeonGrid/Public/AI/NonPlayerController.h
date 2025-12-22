@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Runtime/AIModule/Classes/AIController.h"
 #include "NonPlayerController.generated.h"
 
@@ -23,6 +24,12 @@ protected:
 	// Reference a Behavior Tree asset in Blueprint
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTreeAsset;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName OriginLocationKeyName = TEXT("OriginLocation");
+	
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName ShouldPatrolFromOriginKeyName = TEXT("ShouldPatrolFromOrigin");
 
 public:
 	// Called every frame

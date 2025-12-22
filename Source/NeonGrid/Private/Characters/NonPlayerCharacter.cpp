@@ -1,13 +1,13 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "Characters/EnemyCharacter.h"
+#include "Characters/NonPlayerCharacter.h"
 
 #include "AI/NonPlayerController.h"
 
 
 // Sets default values
-AEnemyCharacter::AEnemyCharacter()
+ANonPlayerCharacter::ANonPlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,20 +21,20 @@ AEnemyCharacter::AEnemyCharacter()
  * Called when the game starts or when spawned
  * Initializes the character and its AI controller.
  */
-void AEnemyCharacter::BeginPlay()
+void ANonPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void AEnemyCharacter::Tick(float DeltaTime)
+void ANonPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ANonPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }

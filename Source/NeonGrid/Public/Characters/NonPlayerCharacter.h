@@ -5,24 +5,26 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 
-#include "EnemyCharacter.generated.h"
+#include "NonPlayerCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class NEONGRID_API AEnemyCharacter : public ABaseCharacter
+class NEONGRID_API ANonPlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
-	AEnemyCharacter();
+	ANonPlayerCharacter();
 
 protected:
 	virtual void BeginPlay() override;
-
+	
 public:
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+	UPROPERTY(EditAnywhere, Category = "AI")
+	bool bShouldPatrolFromOrigin = true;
 };

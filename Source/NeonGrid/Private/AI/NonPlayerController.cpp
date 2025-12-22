@@ -2,6 +2,9 @@
 
 #include "AI/NonPlayerController.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Characters/NonPlayerCharacter.h"
+
 // Sets default values
 ANonPlayerController::ANonPlayerController()
 {
@@ -28,6 +31,20 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 	if (BehaviorTreeAsset)
 	{
 		RunBehaviorTree(BehaviorTreeAsset);
+
+		if (UBlackboardComponent* BB = GetBlackboardComponent())
+		{
+			// Initialize OriginLocation
+			BB->SetValueAsVector(OriginLocationKeyName, InPawn->GetActorLocation());
+
+			// Inject the Character's setting into the Blackboard
+			ANonPlayerCharacter* NPC = Cast<ANonPlayerCharacter>(InPawn);
+
+			if (NPC)
+			{
+				BB->SetValueAsBool(ShouldPatrolFromOriginKeyName, NPC->bShouldPatrolFromOrigin);
+			}
+		}
 	}
 }
 
