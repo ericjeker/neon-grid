@@ -20,7 +20,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 1600.0f;
-	CameraBoom->SetRelativeRotation(FRotator(-60.0f, 0.0f, 0.0f));
+	CameraBoom->SetRelativeRotation(FRotator(-60.0f, -45.0f, 0.0f));
 	// Camera is not zooming in when it hits an object
 	CameraBoom->bDoCollisionTest = false;
 	// Fixed angle, doesn't follow character rotation
@@ -125,15 +125,16 @@ void APlayerCharacter::Move(const FInputActionValue& InputActionValue)
 {
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
 
-	if (GetController() == nullptr)
+	if (GetController() == nullptr || FollowCamera == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Controller not found"));
 		return;
 	}
+	
+	const FRotator CameraRotation = FollowCamera->GetComponentRotation();
 
 	// Find out which way is forward
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	const FRotator YawRotation(0, CameraRotation.Yaw, 0);
 
 	// Get forward vector
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
