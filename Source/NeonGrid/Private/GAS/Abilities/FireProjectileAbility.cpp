@@ -37,7 +37,7 @@ void UFireProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	// Spawning usually happens on Authority to ensure replication.
 	if (HasAuthority(&ActivationInfo))
 	{
-		if (ProjectileClass)
+		if (ProjectileClass && GetWorld())
 		{
 			const FVector SpawnLocation = Character->GetActorLocation() + (Character->GetActorForwardVector() * 100.0f);
 			const FRotator SpawnRotation = Character->GetActorRotation();

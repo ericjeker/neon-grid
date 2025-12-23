@@ -26,7 +26,7 @@ ANeonCharacter::ANeonCharacter()
 
 	// Ability system initialization
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AbilitySystemComponent->SetIsReplicated(false);
+	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(AscReplicationMode);
 	
 	// Default attribute set for our character

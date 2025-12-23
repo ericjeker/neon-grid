@@ -31,12 +31,20 @@ public:
 	/** IGenericTeamAgentInterface implementation */
 	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override
 	{
-		ArchetypeData->TeamName = static_cast<ETeamName>(TeamID.GetId());
+		if (ArchetypeData)
+		{
+			ArchetypeData->TeamName = static_cast<ETeamName>(TeamID.GetId());
+		}
 	}
 
 	virtual FGenericTeamId GetGenericTeamId() const override
 	{
-		return FGenericTeamId(static_cast<uint8>(ArchetypeData->TeamName));
+		if (ArchetypeData)
+		{
+			return FGenericTeamId(static_cast<uint8>(ArchetypeData->TeamName));
+		}
+		
+		return FGenericTeamId(static_cast<uint8>(ETeamName::Neutrals));
 	}
 
 	/**

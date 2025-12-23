@@ -147,10 +147,9 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 	else
 	{
 		const AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(NeonGridAIKeys::TargetActor));
-		UE_LOG(LogTemp, Warning, TEXT("Lost track of Target: %s"), *CurrentTarget->GetName());
 
 		// We lost sight of a target. Was it our current target?
-		if (CurrentTarget == Actor)
+		if (CurrentTarget && CurrentTarget == Actor)
 		{
 			// We lost the actual target we were chasing. Clear the value.
 			BB->SetValueAsObject(NeonGridAIKeys::TargetActor, nullptr);
