@@ -1,12 +1,12 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "GAS/Abilities/FireProjectile.h"
+#include "GAS/Abilities/FireProjectileAbility.h"
 
 #include "GameFramework/Character.h"
 #include "Projectiles/BaseProjectile.h"
 
-UGA_FireProjectile::UGA_FireProjectile()
+UFireProjectileAbility::UFireProjectileAbility()
 {
 	// Default settings (override from parent)
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
@@ -16,7 +16,7 @@ UGA_FireProjectile::UGA_FireProjectile()
 	// AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Weapon.Fire")));
 }
 
-void UGA_FireProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UFireProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	// 1. Commit Ability (Check costs, cooldowns, etc.)
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))

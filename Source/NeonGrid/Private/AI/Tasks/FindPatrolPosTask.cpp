@@ -1,17 +1,17 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
-#include "AI/BTTask_FindPatrolPos.h"
+#include "AI/Tasks/FindPatrolPosTask.h"
 
 #include "AIController.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-UBTTask_FindPatrolPos::UBTTask_FindPatrolPos()
+UFindPatrolPosTask::UFindPatrolPosTask()
 {
 	NodeName = "Find Patrol Pos";
 }
 
-EBTNodeResult::Type UBTTask_FindPatrolPos::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const APawn* Pawn = OwnerComp.GetAIOwner()->GetPawn();
 	if (!Pawn) return EBTNodeResult::Failed;

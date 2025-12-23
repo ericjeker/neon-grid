@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTTask_FindPatrolPos.generated.h"
+#include "FindPatrolPosTask.generated.h"
 
 /**
  * Represents a behavior tree task responsible for determining a patrol position
@@ -12,12 +12,12 @@
  * and updates the corresponding key in the AI's blackboard.
  */
 UCLASS()
-class NEONGRID_API UBTTask_FindPatrolPos : public UBTTaskNode
+class NEONGRID_API UFindPatrolPosTask : public UBTTaskNode
 {
 	GENERATED_BODY()
 
 public:
-	UBTTask_FindPatrolPos();
+	UFindPatrolPosTask();
 
 	/**
 	 * Executes the task to find a patrol position for an AI agent.
