@@ -24,7 +24,7 @@ protected:
 
 	/** Preception, Sense Configuration, Detection */
 	UPROPERTY(VisibleAnywhere, Category = "AI")
-	TObjectPtr<class UAISenseConfig_Sight> SightConfig;
+	TObjectPtr<class UAISenseConfig_Sight> SenseSightConfig;
 
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	

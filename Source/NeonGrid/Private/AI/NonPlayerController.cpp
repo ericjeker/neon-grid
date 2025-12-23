@@ -17,16 +17,16 @@ ANonPlayerController::ANonPlayerController()
 
 	// Initialization
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
-	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
+	SenseSightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
 	// Relative to the agent, not the player
-	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	SightConfig->DetectionByAffiliation.bDetectNeutrals = false;
-	SightConfig->DetectionByAffiliation.bDetectFriendlies = false;
+	SenseSightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SenseSightConfig->DetectionByAffiliation.bDetectNeutrals = false;
+	SenseSightConfig->DetectionByAffiliation.bDetectFriendlies = false;
 
 	// Assign config to component
-	PerceptionComponent->ConfigureSense(*SightConfig);
-	PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+	PerceptionComponent->ConfigureSense(*SenseSightConfig);
+	PerceptionComponent->SetDominantSense(SenseSightConfig->GetSenseImplementation());
 }
 
 // Called when the game starts or when spawned
@@ -81,14 +81,14 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 	}
 
 	// 4. Configure Perception based on Archetype
-	if (PerceptionComponent && SightConfig)
+	if (PerceptionComponent && SenseSightConfig)
 	{
-		SightConfig->SightRadius = Config->SightRadius;
-		SightConfig->LoseSightRadius = Config->LoseSightRadius;
-		SightConfig->PeripheralVisionAngleDegrees = Config->PeripheralVisionDegrees;
+		SenseSightConfig->SightRadius = Config->SightRadius;
+		SenseSightConfig->LoseSightRadius = Config->LoseSightRadius;
+		SenseSightConfig->PeripheralVisionAngleDegrees = Config->PeripheralVisionDegrees;
         
-		PerceptionComponent->ConfigureSense(*SightConfig);
-		PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+		PerceptionComponent->ConfigureSense(*SenseSightConfig);
+		PerceptionComponent->SetDominantSense(SenseSightConfig->GetSenseImplementation());
 	}
 }
 
