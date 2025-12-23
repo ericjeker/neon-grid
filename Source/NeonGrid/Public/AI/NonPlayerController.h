@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BehaviorTree/BehaviorTreeTypes.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "Runtime/AIModule/Classes/AIController.h"
 
@@ -23,26 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-	// Reference a Behavior Tree asset in Blueprint
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	TObjectPtr<UBehaviorTree> BehaviorTreeAsset;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	FName OriginLocationKeyName = TEXT("OriginLocation");
-	
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	FName ShouldPatrolFromOriginKeyName = TEXT("ShouldPatrolFromOrigin");
-
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
-	FName TargetActorKeyName = TEXT("TargetActor");
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	UAIPerceptionComponent* AIPerceptionComponent;
-
 	/** Preception, Sense Configuration, Detection */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	TObjectPtr<class UAISenseConfig_Sight> SightConfig;
-	
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	TObjectPtr<class UAISenseConfig_Sight> SenseSightConfig;
+
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 	
 	UFUNCTION()

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "BaseGameMode.generated.h"
+#include "NeonGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class NEONGRID_API ABaseGameMode : public AGameModeBase
+class NEONGRID_API ANeonGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	

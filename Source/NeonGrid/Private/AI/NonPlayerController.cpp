@@ -3,10 +3,11 @@
 #include "AI/NonPlayerController.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/NonPlayerCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
+#include "Characters/NonPlayerCharacter.h"
+#include "Characters/NPCArchetypeData.h"
 
 // Sets default values
 ANonPlayerController::ANonPlayerController()
@@ -14,21 +15,18 @@ ANonPlayerController::ANonPlayerController()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
-	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
+	// Initialization
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
+	SenseSightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 
-	// Configure Sight Sense
-	SightConfig->SightRadius = 2000.f;
-	SightConfig->LoseSightRadius = 2500.f;
-	SightConfig->PeripheralVisionAngleDegrees = 90.f;
 	// Relative to the agent, not the player
-	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
-	SightConfig->DetectionByAffiliation.bDetectNeutrals = false;
-	SightConfig->DetectionByAffiliation.bDetectFriendlies = false;
+	SenseSightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SenseSightConfig->DetectionByAffiliation.bDetectNeutrals = false;
+	SenseSightConfig->DetectionByAffiliation.bDetectFriendlies = false;
 
 	// Assign config to component
-	AIPerceptionComponent->ConfigureSense(*SightConfig);
-	AIPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+	PerceptionComponent->ConfigureSense(*SenseSightConfig);
+	PerceptionComponent->SetDominantSense(SenseSightConfig->GetSenseImplementation());
 }
 
 // Called when the game starts or when spawned
@@ -37,9 +35,9 @@ void ANonPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	// Bind the perception update function
-	if (AIPerceptionComponent)
+	if (PerceptionComponent)
 	{
-		AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ANonPlayerController::OnTargetDetected);
+		PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ANonPlayerController::OnTargetDetected);
 	}
 }
 
@@ -53,29 +51,44 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	// Explicitly set the Controller's Team ID to match the Pawn's Team ID
-	if (const IGenericTeamAgentInterface* TeamAgent = Cast<IGenericTeamAgentInterface>(InPawn))
+	// 1. Validate the possessed pawn and its configuration data
+	const ANonPlayerCharacter* NPC = Cast<ANonPlayerCharacter>(InPawn);
+	if (!NPC)
 	{
-		SetGenericTeamId(TeamAgent->GetGenericTeamId());
+		return;
 	}
 
-	if (BehaviorTreeAsset)
+	const UNPCArchetypeData* Config = NPC->GetArchetypeData();
+	if (!Config)
 	{
-		RunBehaviorTree(BehaviorTreeAsset);
+		return;
+	}
+	
+	// 1. Start Behavior Tree
+	if (Config->BehaviorTree)
+	{
+		RunBehaviorTree(Config->BehaviorTree);
+	}
+	
+	// 2. Synchronize Team ID for IGenericTeamAgentInterface
+	SetGenericTeamId(FGenericTeamId(static_cast<uint8>(Config->TeamName)));
 
-		if (UBlackboardComponent* BB = GetBlackboardComponent())
-		{
-			// Initialize OriginLocation
-			BB->SetValueAsVector(OriginLocationKeyName, InPawn->GetActorLocation());
+	// 3. Initialize Blackboard values (Now valid because RunBehaviorTree was called)
+	if (UBlackboardComponent* BB = GetBlackboardComponent())
+	{
+		BB->SetValueAsVector(NeonGridAIKeys::OriginLocation, InPawn->GetActorLocation());
+		BB->SetValueAsBool(NeonGridAIKeys::ShouldPatrolFromOrigin, Config->bShouldPatrolFromOrigin);
+	}
 
-			// Inject the Character's setting into the Blackboard
-			ANonPlayerCharacter* NPC = Cast<ANonPlayerCharacter>(InPawn);
-
-			if (NPC)
-			{
-				BB->SetValueAsBool(ShouldPatrolFromOriginKeyName, NPC->ShouldPatrolFromOrigin());
-			}
-		}
+	// 4. Configure Perception based on Archetype
+	if (PerceptionComponent && SenseSightConfig)
+	{
+		SenseSightConfig->SightRadius = Config->SightRadius;
+		SenseSightConfig->LoseSightRadius = Config->LoseSightRadius;
+		SenseSightConfig->PeripheralVisionAngleDegrees = Config->PeripheralVisionDegrees;
+        
+		PerceptionComponent->ConfigureSense(*SenseSightConfig);
+		PerceptionComponent->SetDominantSense(SenseSightConfig->GetSenseImplementation());
 	}
 }
 
@@ -116,7 +129,7 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 		if (Attitude == ETeamAttitude::Hostile)
 		{
 			// Update Blackboard to chase this actor
-			BB->SetValueAsObject(TargetActorKeyName, Actor);
+			BB->SetValueAsObject(NeonGridAIKeys::TargetActor, Actor);
 
 			// Logic for when an ENEMY is seen (Attack, Chase, etc.)
 			UE_LOG(LogTemp, Warning, TEXT("Hostile Detected: %s"), *Actor->GetName());
@@ -133,14 +146,13 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 	}
 	else
 	{
-		const AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(TargetActorKeyName));
-		UE_LOG(LogTemp, Warning, TEXT("Lost track of Target: %s"), *CurrentTarget->GetName());
-		
+		const AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(NeonGridAIKeys::TargetActor));
+
 		// We lost sight of a target. Was it our current target?
-		if (CurrentTarget == Actor)
+		if (CurrentTarget && CurrentTarget == Actor)
 		{
 			// We lost the actual target we were chasing. Clear the value.
-			BB->SetValueAsObject(TargetActorKeyName, nullptr);
+			BB->SetValueAsObject(NeonGridAIKeys::TargetActor, nullptr);
 		}
 	}
 }

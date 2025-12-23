@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 
-#include "BaseCharacter.h"
+#include "NeonCharacter.h"
 #include "NeonGridEnums.h"
+#include "NPCArchetypeData.h"
 
 #include "NonPlayerCharacter.generated.h"
 
@@ -17,7 +18,7 @@
  * @implements IGenericTeamAgentInterface
  */
 UCLASS()
-class NEONGRID_API ANonPlayerCharacter : public ABaseCharacter, public IGenericTeamAgentInterface
+class NEONGRID_API ANonPlayerCharacter : public ANeonCharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -28,25 +29,37 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/** IGenericTeamAgentInterface implementation */
-	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override
 	{
-		TeamName = static_cast<ETeamName>(TeamID.GetId());
+		TeamID = InTeamID;
 	}
 
 	virtual FGenericTeamId GetGenericTeamId() const override
 	{
-		return FGenericTeamId(static_cast<uint8>(TeamName));
+		return TeamID;
 	}
 
-	/** Returns whether this NPC should patrol from its origin point */
-	FORCEINLINE bool ShouldPatrolFromOrigin() const { return bShouldPatrolFromOrigin; };
-	
+	/**
+	 * Retrieves the archetype data associated with the non-player character (NPC).
+	 *
+	 * @return A pointer to the UNPCArchetypeData object that holds the NPC's configuration data.
+	 */
+	UNPCArchetypeData* GetArchetypeData() const { return ArchetypeData; }
+
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
-	bool bShouldPatrolFromOrigin = true;
-
-	UPROPERTY(EditAnywhere, Category = "AI")
-	ETeamName TeamName = ETeamName::Enemies;
+	/**
+	 * ArchetypeData represents a reference to the archetype configuration data for non-player characters (NPCs).
+	 * This variable holds a pointer to a UNPCArchetypeData object, which defines key attributes and behaviors
+	 * of the NPC, such as team affiliation, AI logic, perception parameters, and other customizable settings.
+	 *
+	 * This property allows for modular configuration and behavior control of NPCs in the game, enabling
+	 * dynamic and reusable archetypes.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
+	TObjectPtr<UNPCArchetypeData> ArchetypeData;
+	
+private:
+	FGenericTeamId TeamID;
 };

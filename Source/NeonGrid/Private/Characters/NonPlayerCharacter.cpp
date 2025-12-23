@@ -15,6 +15,8 @@ ANonPlayerCharacter::ANonPlayerCharacter()
 	// Automatically add a non-player controller to the character
 	AIControllerClass = ANonPlayerController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
+	TeamID = FGenericTeamId(static_cast<uint8>(ETeamName::Neutrals));
 }
 
 /**
@@ -25,6 +27,10 @@ void ANonPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (ArchetypeData)
+	{
+		TeamID = FGenericTeamId(static_cast<uint8>(ArchetypeData->TeamName));
+	}
 }
 
 // Called every frame
