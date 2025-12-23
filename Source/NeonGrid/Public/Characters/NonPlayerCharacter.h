@@ -29,22 +29,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/** IGenericTeamAgentInterface implementation */
-	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override
 	{
-		if (ArchetypeData)
-		{
-			ArchetypeData->TeamName = static_cast<ETeamName>(TeamID.GetId());
-		}
+		TeamID = InTeamID;
 	}
 
 	virtual FGenericTeamId GetGenericTeamId() const override
 	{
-		if (ArchetypeData)
-		{
-			return FGenericTeamId(static_cast<uint8>(ArchetypeData->TeamName));
-		}
-		
-		return FGenericTeamId(static_cast<uint8>(ETeamName::Neutrals));
+		return TeamID;
 	}
 
 	/**
@@ -67,4 +59,7 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	TObjectPtr<UNPCArchetypeData> ArchetypeData;
+	
+private:
+	FGenericTeamId TeamID;
 };
