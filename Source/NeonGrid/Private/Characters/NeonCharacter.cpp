@@ -24,8 +24,12 @@ ANeonCharacter::ANeonCharacter()
 	MeshComp->SetRelativeLocation(FVector(0.0f, 0.0f, -96.0f));
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// Ability System
+	// Ability system initialization
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(false);
+	AbilitySystemComponent->SetReplicationMode(AscReplicationMode);
+	
+	// Default attribute set for our character
 	AttributeSet = CreateDefaultSubobject<UCoreAttributeSet>(TEXT("AttributeSet"));
 }
 

@@ -29,15 +29,6 @@ public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	FBlackboardKeySelector TargetLocationKey;
-	
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	FBlackboardKeySelector OriginLocationKey;
-	
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	FBlackboardKeySelector ShouldPatrolFromOriginKey;
-	
 	UPROPERTY(EditAnywhere, Category = "AI")
 	float SearchRadius = 1000.f;
 };

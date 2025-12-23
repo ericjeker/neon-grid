@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "NeonGridEnums.h"
@@ -37,9 +38,11 @@ protected:
 	void GiveDefaultAbilities();
 
 	/** Ability System */
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
 	UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS")
+	EGameplayEffectReplicationMode AscReplicationMode = EGameplayEffectReplicationMode::Minimal;
 
 	/** 
 	 * Map of Input IDs to Ability Classes.
@@ -54,7 +57,7 @@ protected:
 	 */
 	UPROPERTY()
 	class UCoreAttributeSet* AttributeSet;
-	
+
 private:
 	// Tracks granted abilities to remove them if needed
 	TArray<FGameplayAbilitySpecHandle> DefaultAbilityHandles;

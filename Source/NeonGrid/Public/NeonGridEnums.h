@@ -38,3 +38,11 @@ enum class EAbilityInputID : uint8
 	Sprint UMETA(DisplayName = "Sprint"),
 	Crouch UMETA(DisplayName = "Crouch")
 };
+
+namespace NeonGridAIKeys
+{
+	const FName TargetActor = TEXT("TargetActor");
+	const FName PatrolLocation = TEXT("PatrolLocation");
+	const FName OriginLocation = TEXT("OriginLocation");
+	const FName ShouldPatrolFromOrigin = TEXT("ShouldPatrolFromOrigin");
+}

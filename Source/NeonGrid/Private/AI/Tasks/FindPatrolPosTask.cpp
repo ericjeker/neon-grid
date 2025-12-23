@@ -4,11 +4,12 @@
 
 #include "AIController.h"
 #include "NavigationSystem.h"
+#include "NeonGridEnums.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
 UFindPatrolPosTask::UFindPatrolPosTask()
 {
-	NodeName = "Find Patrol Pos";
+	NodeName = "Find Patrol Position";
 }
 
 EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -19,8 +20,8 @@ EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& Owne
 	const UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (!NavSys) return EBTNodeResult::Failed;
 
-	FVector SearchOrigin = OwnerComp.GetBlackboardComponent()->GetValueAsVector(OriginLocationKey.SelectedKeyName);
-	const bool bUseOriginLocation = OwnerComp.GetBlackboardComponent()->GetValueAsBool(ShouldPatrolFromOriginKey.SelectedKeyName);
+	FVector SearchOrigin = OwnerComp.GetBlackboardComponent()->GetValueAsVector(NeonGridAIKeys::OriginLocation);
+	const bool bUseOriginLocation = OwnerComp.GetBlackboardComponent()->GetValueAsBool(NeonGridAIKeys::ShouldPatrolFromOrigin);
 	
 	// If OriginLocation isn't set, or we should not use it, fall back to current
 	if (!bUseOriginLocation || SearchOrigin.IsZero())
@@ -30,7 +31,7 @@ EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& Owne
 
 	if (FNavLocation NextLocation; NavSys->GetRandomReachablePointInRadius(SearchOrigin, SearchRadius, NextLocation))
 	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(TargetLocationKey.SelectedKeyName, NextLocation.Location);
+		OwnerComp.GetBlackboardComponent()->SetValueAsVector(NeonGridAIKeys::PatrolLocation, NextLocation.Location);
 		return EBTNodeResult::Succeeded;
 	}
 

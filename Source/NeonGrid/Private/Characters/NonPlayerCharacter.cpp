@@ -24,7 +24,6 @@ ANonPlayerCharacter::ANonPlayerCharacter()
 void ANonPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
