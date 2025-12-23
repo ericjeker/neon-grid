@@ -1,13 +1,13 @@
 // Copyright Eric Jeker, Inc. All Rights Reserved.
 
-#include "Characters/BaseCharacter.h"
+#include "Characters/NeonCharacter.h"
 
 #include "AbilitySystemComponent.h"
 #include "GAS/CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
-ABaseCharacter::ABaseCharacter()
+ANeonCharacter::ANeonCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,25 +29,55 @@ ABaseCharacter::ABaseCharacter()
 	AttributeSet = CreateDefaultSubobject<UCoreAttributeSet>(TEXT("AttributeSet"));
 }
 
-UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
+UAbilitySystemComponent* ANeonCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
 
 // Called when the game starts or when spawned
-void ABaseCharacter::BeginPlay()
+void ANeonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
+void ANeonCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	// Initialize GAS Abilities on Server
+	if (HasAuthority() && AbilitySystemComponent)
+	{
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
+		GiveDefaultAbilities();
+	}
+}
+
+void ANeonCharacter::GiveDefaultAbilities()
+{
+	if (!HasAuthority() || !AbilitySystemComponent) return;
+
+	for (const auto& AbilityPair : DefaultAbilities)
+	{
+		EAbilityInputID InputID = AbilityPair.Key;
+		TSubclassOf<UGameplayAbility> AbilityClass = AbilityPair.Value;
+
+		if (AbilityClass)
+		{
+			// Grant the ability and bind it to the Input ID from the enum
+			FGameplayAbilitySpec AbilitySpec(AbilityClass, 1, static_cast<int32>(InputID), this);
+			DefaultAbilityHandles.Add(AbilitySystemComponent->GiveAbility(AbilitySpec));
+		}
+	}
+}
+
 // Called every frame
-void ABaseCharacter::Tick(float DeltaTime)
+void ANeonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ANeonCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 
-#include "BaseCharacter.h"
+#include "NeonCharacter.h"
 #include "NeonGridEnums.h"
 
 #include "NonPlayerCharacter.generated.h"
@@ -17,7 +17,7 @@
  * @implements IGenericTeamAgentInterface
  */
 UCLASS()
-class NEONGRID_API ANonPlayerCharacter : public ABaseCharacter, public IGenericTeamAgentInterface
+class NEONGRID_API ANonPlayerCharacter : public ANeonCharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -38,14 +38,8 @@ public:
 		return FGenericTeamId(static_cast<uint8>(TeamName));
 	}
 
-	/** Returns whether this NPC should patrol from its origin point */
-	FORCEINLINE bool ShouldPatrolFromOrigin() const { return bShouldPatrolFromOrigin; };
-	
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
-	bool bShouldPatrolFromOrigin = true;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	ETeamName TeamName = ETeamName::Enemies;

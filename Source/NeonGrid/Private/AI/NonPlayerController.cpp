@@ -3,7 +3,6 @@
 #include "AI/NonPlayerController.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/NonPlayerCharacter.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
@@ -59,9 +58,9 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 		SetGenericTeamId(TeamAgent->GetGenericTeamId());
 	}
 
-	if (BehaviorTreeAsset)
+	if (BehaviorTree)
 	{
-		RunBehaviorTree(BehaviorTreeAsset);
+		RunBehaviorTree(BehaviorTree);
 
 		if (UBlackboardComponent* BB = GetBlackboardComponent())
 		{
@@ -69,12 +68,7 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 			BB->SetValueAsVector(OriginLocationKeyName, InPawn->GetActorLocation());
 
 			// Inject the Character's setting into the Blackboard
-			ANonPlayerCharacter* NPC = Cast<ANonPlayerCharacter>(InPawn);
-
-			if (NPC)
-			{
-				BB->SetValueAsBool(ShouldPatrolFromOriginKeyName, NPC->ShouldPatrolFromOrigin());
-			}
+			BB->SetValueAsBool(ShouldPatrolFromOriginKeyName, bShouldPatrolFromOrigin);
 		}
 	}
 }
@@ -135,7 +129,7 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 	{
 		const AActor* CurrentTarget = Cast<AActor>(BB->GetValueAsObject(TargetActorKeyName));
 		UE_LOG(LogTemp, Warning, TEXT("Lost track of Target: %s"), *CurrentTarget->GetName());
-		
+
 		// We lost sight of a target. Was it our current target?
 		if (CurrentTarget == Actor)
 		{
