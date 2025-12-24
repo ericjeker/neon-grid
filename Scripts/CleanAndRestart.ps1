@@ -4,12 +4,12 @@
 # Both parameters are optional
 
 param(
-    [string]$ProjectName = "",
-    [string]$UEVersion = "5.6"  # Adjust to your UE version
+    [string]$ProjectName = "NeonGrid",
+    [string]$UEVersion = "5.7"  # Adjust to your UE version
 )
 
 # Get the script directory (project root)
-$ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Get-Location
 
 # Find .uproject file if ProjectName not specified
 if ($ProjectName -eq "") {
@@ -70,17 +70,6 @@ $process = Start-Process -FilePath $UnrealVersionSelector -ArgumentList "/projec
 if ($process.ExitCode -ne 0) {
     Write-Error "Failed to generate project files. Exit code: $($process.ExitCode)"
     exit 1
-}
-
-# 5. Launch the .uproject file
-Write-Host "Launching Unreal Editor..." -ForegroundColor Green
-Start-Process $UProjectFile
-
-# 6. Open solution (optional)
-$SolutionFile = Join-Path $ProjectRoot "$ProjectName.sln"
-if (Test-Path $SolutionFile) {
-    Write-Host "Opening solution..." -ForegroundColor Green
-    Start-Process $SolutionFile
 }
 
 Write-Host "Clean rebuild process completed!" -ForegroundColor Green
