@@ -48,8 +48,8 @@ EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& Owne
 	const UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (!NavSys) return EBTNodeResult::Failed;
 
-	FVector SearchOrigin = OwnerComp.GetBlackboardComponent()->GetValueAsVector(NeonGridAIKeys::OriginLocation);
-	const bool bUseOriginLocation = OwnerComp.GetBlackboardComponent()->GetValueAsBool(
+	FVector SearchOrigin = BlackboardComp->GetValueAsVector(NeonGridAIKeys::OriginLocation);
+	const bool bUseOriginLocation = BlackboardComp->GetValueAsBool(
 		NeonGridAIKeys::ShouldPatrolFromOrigin);
 
 	// If OriginLocation isn't set, or we should not use it, fall back to current
@@ -60,7 +60,7 @@ EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& Owne
 
 	if (FNavLocation NextLocation; NavSys->GetRandomReachablePointInRadius(SearchOrigin, SearchRadius, NextLocation))
 	{
-		OwnerComp.GetBlackboardComponent()->SetValueAsVector(NeonGridAIKeys::PatrolLocation, NextLocation.Location);
+		BlackboardComp->SetValueAsVector(NeonGridAIKeys::PatrolLocation, NextLocation.Location);
 		return EBTNodeResult::Succeeded;
 	}
 
