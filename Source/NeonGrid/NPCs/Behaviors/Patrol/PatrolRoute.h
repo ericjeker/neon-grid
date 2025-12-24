@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "NeonGrid/Components/PatrolPointsComponent.h"
+
+#include "NeonGrid/NPCs/Behaviors/Patrol/PatrolPointsComponent.h"
+
 #include "PatrolRoute.generated.h"
 
 UCLASS()

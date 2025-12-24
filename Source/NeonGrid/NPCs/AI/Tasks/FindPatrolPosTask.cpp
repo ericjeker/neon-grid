@@ -5,8 +5,8 @@
 #include "AIController.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "NeonGrid/NeonGridEnums.h"
-#include "NeonGrid/Components/PatrolPointsComponent.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
+#include "NeonGrid/NPCs/Behaviors/Patrol/PatrolPointsComponent.h"
 
 UFindPatrolPosTask::UFindPatrolPosTask()
 {

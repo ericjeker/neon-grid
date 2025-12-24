@@ -3,7 +3,7 @@
 
 #include "NonPlayerCharacter.h"
 
-#include "NeonGrid/AI/NonPlayerController.h"
+#include "NeonGrid/NPCs/NonPlayerController.h"
 
 
 // Sets default values

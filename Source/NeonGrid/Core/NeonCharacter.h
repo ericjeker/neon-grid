@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
-#include "NeonGrid/NeonGridEnums.h"
 #include "Abilities/GameplayAbility.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
+#include "GameFramework/Character.h"
+
+#include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "NeonCharacter.generated.h"
 

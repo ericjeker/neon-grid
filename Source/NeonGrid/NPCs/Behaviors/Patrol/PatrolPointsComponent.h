@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NeonGrid/NeonGridEnums.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "PatrolPointsComponent.generated.h"
 

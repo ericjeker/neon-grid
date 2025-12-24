@@ -5,10 +5,9 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 
-#include "NeonCharacter.h"
+#include "NeonGrid/Core/NeonCharacter.h"
+#include "NeonGrid/NPCs/Behaviors/Patrol/PatrolRoute.h"
 #include "NPCArchetypeData.h"
-#include "NeonGrid/Actors/PatrolRoute.h"
-#include "NeonGrid/Components/PatrolPointsComponent.h"
 
 #include "NonPlayerCharacter.generated.h"
 

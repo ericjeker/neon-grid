@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 
-#include "NeonCharacter.h"
-#include "NeonGrid/NeonGridEnums.h"
+#include "NeonGrid/Core/NeonCharacter.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "PlayerCharacter.generated.h"
 

@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 
 #include "GameFramework/PlayerController.h"
-#include "NeonGrid/NeonGridEnums.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "NeonPlayerController.generated.h"
 

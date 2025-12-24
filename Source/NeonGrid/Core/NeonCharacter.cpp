@@ -3,7 +3,7 @@
 #include "NeonCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "NeonGrid/GAS/CoreAttributeSet.h"
+#include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values

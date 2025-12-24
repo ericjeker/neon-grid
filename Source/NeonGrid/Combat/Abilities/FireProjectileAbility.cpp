@@ -4,7 +4,7 @@
 #include "FireProjectileAbility.h"
 
 #include "GameFramework/Character.h"
-#include "NeonGrid/Projectiles/BaseProjectile.h"
+#include "NeonGrid/Combat/Projectiles/BaseProjectile.h"
 
 UFireProjectileAbility::UFireProjectileAbility()
 {

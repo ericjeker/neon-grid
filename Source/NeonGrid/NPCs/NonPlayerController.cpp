@@ -6,8 +6,8 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
-#include "NeonGrid/Characters/NonPlayerCharacter.h"
-#include "NeonGrid/Characters/NPCArchetypeData.h"
+#include "NeonGrid/NPCs/NonPlayerCharacter.h"
+#include "NeonGrid/NPCs/NPCArchetypeData.h"
 
 // Sets default values
 ANonPlayerController::ANonPlayerController()

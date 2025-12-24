@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "NeonGrid/Characters/PlayerCharacter.h"
+#include "PlayerCharacter.h"
 
 ANeonPlayerController::ANeonPlayerController()
 {

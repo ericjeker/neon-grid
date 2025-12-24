@@ -6,7 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "BehaviorTree/BehaviorTree.h"
 
-#include "NeonGrid/NeonGridEnums.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "NPCArchetypeData.generated.h"
 
