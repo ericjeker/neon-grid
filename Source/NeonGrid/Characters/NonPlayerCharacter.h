@@ -7,6 +7,8 @@
 
 #include "NeonCharacter.h"
 #include "NPCArchetypeData.h"
+#include "NeonGrid/Actors/PatrolRoute.h"
+#include "NeonGrid/Components/PatrolPointsComponent.h"
 
 #include "NonPlayerCharacter.generated.h"
 
@@ -59,6 +61,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	TObjectPtr<UNPCArchetypeData> ArchetypeData;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UPatrolPointsComponent* PatrolPointsComponent;
+
 private:
 	FGenericTeamId TeamID;
 };

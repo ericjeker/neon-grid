@@ -11,7 +11,10 @@ ANonPlayerCharacter::ANonPlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
+	// Initialize the components
+	PatrolPointsComponent = CreateDefaultSubobject<UPatrolPointsComponent>(TEXT("PatrolPointsComponent"));
+
 	// Automatically add a non-player controller to the character
 	AIControllerClass = ANonPlayerController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
