@@ -11,7 +11,9 @@ APatrolRoute::APatrolRoute()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
+#if WITH_EDITOR
 void APatrolRoute::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
+#endif

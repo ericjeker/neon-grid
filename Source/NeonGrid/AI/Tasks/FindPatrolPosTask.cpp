@@ -15,7 +15,10 @@ UFindPatrolPosTask::UFindPatrolPosTask()
 
 EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	const APawn* Pawn = OwnerComp.GetAIOwner()->GetPawn();
+	const AAIController* AIC = OwnerComp.GetAIOwner();
+	if (!AIC) return EBTNodeResult::Failed;
+	
+	const APawn* Pawn = AIC->GetPawn();
 	if (!Pawn) return EBTNodeResult::Failed;
 
 	UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
