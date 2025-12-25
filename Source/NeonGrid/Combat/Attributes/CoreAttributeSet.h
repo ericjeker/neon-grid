@@ -37,7 +37,11 @@ public:
 	
 	// This handles logic like clamping Health between 0 and MaxHealth when it changes
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	
+
 	// This handles logic after a change has occurred (e.g., triggering a death event)
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+protected:
+	/** Checks whether the owning actor of this attribute set should be considered dead. */
+	void CheckOwnerForDeath() const;
 };

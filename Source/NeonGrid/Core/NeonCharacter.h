@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "NeonGrid/Combat/Components/HealthComponent.h"
 
 #include "NeonGrid/Core/NeonGridEnums.h"
 
@@ -29,14 +30,6 @@ public:
 
 	// IAbilitySystemInterface implementation
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-
-	/** Returns true if the character is dead */
-	UFUNCTION(BlueprintCallable, Category = "Character|Health")
-	bool IsDead() const;
-
-	/** Called when the character dies */
-	UFUNCTION(BlueprintNativeEvent, Category = "Character|Health")
-	void OnDeath();
 
 protected:
 	// Called when the game starts or when spawned
@@ -66,6 +59,9 @@ protected:
 	 */
 	UPROPERTY()
 	class UCoreAttributeSet* AttributeSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UHealthComponent* HealthComponent;
 
 private:
 	// Tracks granted abilities to remove them if needed

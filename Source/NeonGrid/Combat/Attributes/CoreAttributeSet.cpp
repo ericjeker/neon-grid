@@ -36,16 +36,7 @@ void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 			
 			// Check for death
-			if (GetHealth() <= 0.0f)
-			{
-				if (AActor* OwnerActor = GetOwningActor())
-				{
-					if (ANeonCharacter* Character = Cast<ANeonCharacter>(OwnerActor))
-					{
-						Character->OnDeath();
-					}
-				}
-			}
+			CheckOwnerForDeath();
 		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -54,14 +45,19 @@ void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 		
 		// Check for death even on direct health modification
-		if (GetHealth() <= 0.0f)
+		CheckOwnerForDeath();
+	}
+}
+
+void UCoreAttributeSet::CheckOwnerForDeath() const
+{
+	if (GetHealth() <= 0.0f)
+	{
+		if (const AActor* OwnerActor = GetOwningActor())
 		{
-			if (AActor* OwnerActor = GetOwningActor())
+			if (const auto HealthComp = OwnerActor->FindComponentByClass<UHealthComponent>())
 			{
-				if (ANeonCharacter* Character = Cast<ANeonCharacter>(OwnerActor))
-				{
-					Character->OnDeath();
-				}
+				HealthComp->OnDeath();
 			}
 		}
 	}
