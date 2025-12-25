@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NPCArchetypeData.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "Runtime/AIModule/Classes/AIController.h"
 
@@ -21,7 +22,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
-
+	
 	/** Preception, Sense Configuration, Detection */
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	TObjectPtr<class UAISenseConfig_Sight> SenseSightConfig;

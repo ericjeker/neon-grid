@@ -41,10 +41,25 @@ enum class EAbilityInputID : uint8
 
 namespace NeonGridAIKeys
 {
+	// Target Tracking
 	const FName TargetActor = TEXT("TargetActor");
+	const FName TargetDistance = TEXT("TargetDistance");
+	const FName TimeLastSawTarget = TEXT("TimeLastSawTarget");
+	
+	// Spatial Awareness
 	const FName OriginLocation = TEXT("OriginLocation");
-	const FName ShouldPatrolFromOrigin = TEXT("ShouldPatrolFromOrigin");
+	const FName LastKnownLocation = TEXT("LastKnownLocation");
 	const FName PatrolLocation = TEXT("PatrolLocation");
+
+	// Behavior
+	const FName IsEngaging = TEXT("IsEngaging");
+	const FName CurrentAlertLevel = TEXT("CurrentAlertLevel");
+	
+	// Tactical
+	const FName PreferredCoverPoint = TEXT("PreferredCoverPoint");
+	
+	// Patrolling
+	const FName ShouldPatrolFromOrigin = TEXT("ShouldPatrolFromOrigin");
 	const FName PatrolPointIndex = TEXT("PatrolPointIndex");
 	const FName IsReversingPatrol = TEXT("IsReversingPatrol");
 }

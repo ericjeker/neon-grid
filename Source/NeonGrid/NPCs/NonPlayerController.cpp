@@ -6,6 +6,10 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "GenericTeamAgentInterface.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Int.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "NeonGrid/NPCs/NonPlayerCharacter.h"
 #include "NeonGrid/NPCs/NPCArchetypeData.h"
 
@@ -51,7 +55,7 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	// 1. Validate the possessed pawn and its configuration data
+	// Validate the possessed pawn and its configuration data
 	const ANonPlayerCharacter* NPC = Cast<ANonPlayerCharacter>(InPawn);
 	if (!NPC)
 	{
@@ -63,30 +67,30 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 	{
 		return;
 	}
-	
-	// 2. Start Behavior Tree
+
+	// Start Behavior Tree
 	if (Config->BehaviorTree)
 	{
 		RunBehaviorTree(Config->BehaviorTree);
+
+		if (const auto BB = GetBlackboardComponent())
+		{
+			// Initialize default values
+			BB->SetValueAsVector(NeonGridAIKeys::OriginLocation, InPawn->GetActorLocation());
+			BB->SetValueAsBool(NeonGridAIKeys::ShouldPatrolFromOrigin, Config->bShouldPatrolFromOrigin);
+		}
 	}
-	
-	// 3. Synchronize Team ID for IGenericTeamAgentInterface
+
+	// Synchronize Team ID for IGenericTeamAgentInterface
 	SetGenericTeamId(FGenericTeamId(static_cast<uint8>(Config->TeamName)));
 
-	// 4. Initialize Blackboard values (Now valid because RunBehaviorTree was called)
-	if (UBlackboardComponent* BB = GetBlackboardComponent())
-	{
-		BB->SetValueAsVector(NeonGridAIKeys::OriginLocation, InPawn->GetActorLocation());
-		BB->SetValueAsBool(NeonGridAIKeys::ShouldPatrolFromOrigin, Config->bShouldPatrolFromOrigin);
-	}
-
-	// 5. Configure Perception based on Archetype
+	// Configure Perception based on Archetype
 	if (PerceptionComponent && SenseSightConfig)
 	{
 		SenseSightConfig->SightRadius = Config->SightRadius;
 		SenseSightConfig->LoseSightRadius = Config->LoseSightRadius;
 		SenseSightConfig->PeripheralVisionAngleDegrees = Config->PeripheralVisionDegrees;
-        
+
 		PerceptionComponent->ConfigureSense(*SenseSightConfig);
 		PerceptionComponent->SetDominantSense(SenseSightConfig->GetSenseImplementation());
 	}
@@ -131,6 +135,12 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 			// Update Blackboard to chase this actor
 			BB->SetValueAsObject(NeonGridAIKeys::TargetActor, Actor);
 
+			// Store the last known location (where we currently see them)
+			BB->SetValueAsVector(NeonGridAIKeys::LastKnownLocation, Stimulus.StimulusLocation);
+
+			// Store the current time when seeing the target
+			BB->SetValueAsFloat(NeonGridAIKeys::TimeLastSawTarget, GetWorld()->GetTimeSeconds());
+
 			// Logic for when an ENEMY is seen (Attack, Chase, etc.)
 			UE_LOG(LogTemp, Warning, TEXT("Hostile Detected: %s"), *Actor->GetName());
 		}
@@ -141,6 +151,7 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 		}
 		else
 		{
+			// Logic for when a Neutral is seen (Ignore, Salute)
 			UE_LOG(LogTemp, Log, TEXT("Just a random: %s"), *Actor->GetName());
 		}
 	}
@@ -151,8 +162,14 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 		// We lost sight of a target. Was it our current target?
 		if (CurrentTarget && CurrentTarget == Actor)
 		{
-			// We lost the actual target we were chasing. Clear the value.
+			// We lost the actual target we were chasing. Clear the value but keep the LastKnownLocation
 			BB->SetValueAsObject(NeonGridAIKeys::TargetActor, nullptr);
+
+			// Store the current time when last saw the target
+			BB->SetValueAsFloat(NeonGridAIKeys::TimeLastSawTarget, GetWorld()->GetTimeSeconds());
+
+			UE_LOG(LogTemp, Warning, TEXT("Lost sight of hostile: %s. Investigating last known location."),
+			       *Actor->GetName());
 		}
 	}
 }
