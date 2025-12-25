@@ -26,7 +26,7 @@ void UBTService_UpdateLastKnownLocation::TickNode(UBehaviorTreeComponent& OwnerC
 
 	// Get the current target actor
 	const AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(NeonGridAIKeys::TargetActor));
-	if (!TargetActor)
+	if (!TargetActor || !IsValid(TargetActor))
 	{
 		return;
 	}
