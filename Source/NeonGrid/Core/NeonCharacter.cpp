@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ANeonCharacter::ANeonCharacter()
@@ -54,6 +55,36 @@ void ANeonCharacter::PossessedBy(AController* NewController)
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 		GiveDefaultAbilities();
 	}
+}
+
+bool ANeonCharacter::IsDead() const
+{
+	if (!AttributeSet)
+	{
+		return false;
+	}
+	
+	return AttributeSet->GetHealth() <= 0.0f;
+}
+
+void ANeonCharacter::OnDeath_Implementation()
+{
+	// Base implementation - can be overridden in child classes
+	// Disable collision
+	if (UCapsuleComponent* CapsuleComp = GetCapsuleComponent())
+	{
+		CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+	// Disable movement
+	if (UCharacterMovementComponent* MovementComp = GetCharacterMovement())
+	{
+		MovementComp->DisableMovement();
+		MovementComp->StopMovementImmediately();
+	}
+
+	// Detach from controller
+	DetachFromControllerPendingDestroy();
 }
 
 void ANeonCharacter::GiveDefaultAbilities()

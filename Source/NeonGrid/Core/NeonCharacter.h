@@ -30,6 +30,14 @@ public:
 	// IAbilitySystemInterface implementation
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	/** Returns true if the character is dead */
+	UFUNCTION(BlueprintCallable, Category = "Character|Health")
+	bool IsDead() const;
+
+	/** Called when the character dies */
+	UFUNCTION(BlueprintNativeEvent, Category = "Character|Health")
+	void OnDeath();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
