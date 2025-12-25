@@ -58,27 +58,24 @@ void ABaseProjectile::BeginPlay()
  * @param NormalImpulse The force of the collision expressed as an impulse vector.
  * @param Hit Detailed information about the hit event, including impact location and normal.
  */
-void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                            FVector NormalImpulse, const FHitResult& Hit)
+void ABaseProjectile::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (!OtherActor || OtherActor == GetOwner() || !DamageEffectClass)
 	{
-		Destroy();
 		return;
 	}
 
 	// Check if the OtherActor is speaking GAS
-	IAbilitySystemInterface* AbilityInterface = Cast<IAbilitySystemInterface>(OtherActor);
+	const IAbilitySystemInterface* AbilityInterface = Cast<IAbilitySystemInterface>(OtherActor);
 	if (!AbilityInterface)
 	{
-		Destroy();
 		return;
 	}
 
 	UAbilitySystemComponent* TargetASC = AbilityInterface->GetAbilitySystemComponent();
 	if (!TargetASC)
 	{
-		Destroy();
 		return;
 	}
 
@@ -87,17 +84,9 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 	EffectContext.AddInstigator(GetInstigator(), this);
 
 	// Depending on the projectile type, the damage effect class can be different
-	FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(DamageEffectClass, 1.0f, EffectContext);
+	const FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(DamageEffectClass, 1.0f, EffectContext);
 	if (SpecHandle.IsValid())
 	{
 		TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
-
-	Destroy();
-}
-
-// Called every frame
-void ABaseProjectile::Tick(const float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
