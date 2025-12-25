@@ -1,4 +1,4 @@
-﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
+// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
 #include "BaseProjectile.h"
@@ -46,17 +46,15 @@ void ABaseProjectile::BeginPlay()
 }
 
 /**
- * Handles the event triggered when the projectile collides with another object.
+ * Handle a collision by applying the configured gameplay damage effect to the hit actor if it supports the Gameplay Ability System.
  *
- * This method is responsible for managing the effects caused by the projectile's impact,
- * including applying gameplay damage effects to the target actor and destroying the projectile
- * after performing its intended functionality.
+ * If the collided actor implements IAbilitySystemInterface and has a valid AbilitySystemComponent, this method creates an effect context (with the projectile's instigator), constructs an outgoing gameplay effect spec from DamageEffectClass, and applies that spec to the target's AbilitySystemComponent.
  *
- * @param HitComponent The specific component of this actor that was involved in the collision (Collision Sphere).
- * @param OtherActor The actor that the projectile collided with.
- * @param OtherComp The specific component of the other actor involved in the collision (Capsule or Sphere Component).
- * @param NormalImpulse The force of the collision expressed as an impulse vector.
- * @param Hit Detailed information about the hit event, including impact location and normal.
+ * @param HitComponent The component on this projectile involved in the collision.
+ * @param OtherActor The actor that was hit; must implement IAbilitySystemInterface with a valid AbilitySystemComponent for an effect to be applied.
+ * @param OtherComp The component on the other actor involved in the collision.
+ * @param NormalImpulse The collision impulse vector.
+ * @param Hit Detailed hit information (impact location, normal, etc.).
  */
 void ABaseProjectile::OnHit_Implementation(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

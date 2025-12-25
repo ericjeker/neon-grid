@@ -1,4 +1,4 @@
-﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
+// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -8,7 +8,16 @@
 #include "BaseProjectile.generated.h"
 
 UCLASS()
-class NEONGRID_API ABaseProjectile : public AActor
+class /**
+ * Called when the projectile collides with another object.
+ *
+ * @param HitComponent The component on this actor that registered the hit.
+ * @param OtherActor The other actor involved in the collision, if any.
+ * @param OtherComp The specific component on the other actor that was hit, if any.
+ * @param NormalImpulse The impulse applied to resolve the collision.
+ * @param Hit Detailed information about the hit (impact point, normal, etc.).
+ */
+NEONGRID_API ABaseProjectile : public AActor
 {
 	GENERATED_BODY()
 

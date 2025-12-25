@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "CoreMinimal.h"
 
@@ -14,7 +14,43 @@ struct FInputActionValue;
 
 /** Custom player controller for the NeonGrid game */
 UCLASS()
-class NEONGRID_API ANeonPlayerController : public APlayerController
+class /**
+ * Construct the Neon player controller and initialize default values.
+ */
+ 
+/**
+ * Configure input bindings and map actions to handler functions.
+ */
+ 
+/**
+ * Update per-frame controller state.
+ * @param DeltaTime Time elapsed since the last frame, in seconds.
+ */
+ 
+/**
+ * Perform initialization when play begins for this controller.
+ */
+ 
+/**
+ * Process movement input from the Enhanced Input system.
+ * @param Value Input value containing the movement vector or axis values.
+ */
+ 
+/**
+ * Process look/aim input from the Enhanced Input system.
+ * @param Value Input value containing the look/aim vector or axis values.
+ */
+ 
+/**
+ * Handle an ability input press from the GAS input mapping.
+ * @param InputId Identifier for the ability input that was pressed.
+ */
+ 
+/**
+ * Handle an ability input release from the GAS input mapping.
+ * @param InputId Identifier for the ability input that was released.
+ */
+NEONGRID_API ANeonPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
