@@ -49,7 +49,7 @@ private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	
-	// GAS Input Handlers
+	/** GAS Input Handlers */
 	void AbilityPressed(EAbilityInputID InputId);
 	void AbilityReleased(EAbilityInputID InputId);
 };

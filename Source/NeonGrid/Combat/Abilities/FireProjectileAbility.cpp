@@ -17,44 +17,42 @@ UFireProjectileAbility::UFireProjectileAbility()
 }
 
 void UFireProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                             const FGameplayAbilityActorInfo* ActorInfo,
-                                             const FGameplayAbilityActivationInfo ActivationInfo,
-                                             const FGameplayEventData* TriggerEventData)
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
 {
-	// 1. Commit Ability (Check costs, cooldowns, etc.)
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	
+	// Commit Ability (Check costs, cooldowns, etc.)
 	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
 
-	// 2. Get the Avatar (The Character)
-	ACharacter* Character = Cast<ACharacter>(ActorInfo->AvatarActor.Get());
-	if (!Character)
-	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
-		return;
-	}
-
-	// 3. Logic: Spawning Actor (Server Only)
+	// Logic: Spawning Actor (Server Only)
 	// Spawning usually happens on Authority to ensure replication.
-	if (HasAuthority(&ActivationInfo))
-	{
-		if (ProjectileClass && GetWorld())
-		{
-			const FVector SpawnLocation = Character->GetActorLocation() + (Character->GetActorForwardVector() * 100.0f);
-			const FRotator SpawnRotation = Character->GetActorRotation();
+	SpawnProjectile();
 
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.Owner = Character;
-			SpawnParams.Instigator = Character;
-
-			GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
-		}
-	}
-
-	// 4. End the ability
+	// End the ability
 	// Since this is an instant fire action, we end it immediately. 
 	// If you had a casting animation, you would wait for the montage to finish.
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+}
+
+void UFireProjectileAbility::SpawnProjectile_Implementation()
+{
+	ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+	const FGameplayAbilityActivationInfo ActivationInfo = GetCurrentActivationInfo();
+	
+	if (HasAuthority(&ActivationInfo) && Character && ProjectileClass && GetWorld())
+	{
+		const FVector SpawnLocation = Character->GetActorLocation() + (Character->GetActorForwardVector() * 100.0f);
+		const FRotator SpawnRotation = Character->GetActorRotation();
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = Character;
+		SpawnParams.Instigator = Character;
+
+		GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
+	}
 }
