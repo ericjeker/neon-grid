@@ -47,16 +47,19 @@ void AWaveManager::FindSpawnAndPatrolPoints()
 	       PatrolPoints.Num());
 }
 
-void AWaveManager::CheckAndSpawnWave()
+void AWaveManager::CleanUpInvalidNPCs()
 {
 	// Clean up any invalid references
 	AliveNPCs.RemoveAll([](const TWeakObjectPtr<AActor>& NPC)
 	{
 		return !NPC.IsValid();
 	});
+}
 
+void AWaveManager::CheckAndSpawnWave()
+{
 	// If no NPCs alive, spawn a new wave
-	if (AliveNPCs.Num() == 0)
+	if (GetAliveNPCCount() == 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("All NPCs defeated! Spawning new wave..."));
 		SpawnWave();
@@ -73,8 +76,8 @@ void AWaveManager::SpawnWave()
 
 	CurrentWaveNumber++;
 
-	// Spawn more enemies each wave
-	const int32 EnemiesThisWave = NPCsPerWave + (CurrentWaveNumber - 1);
+	// Spawn more enemies each wave, but clamp to maximum
+	const int32 EnemiesThisWave = FMath::Min(NPCsPerWave + (CurrentWaveNumber - 1), MaxNPCsPerWave);
 	UE_LOG(LogTemp, Log, TEXT("Spawning Wave %d with %d NPCs"), CurrentWaveNumber, EnemiesThisWave);
 
 	for (int32 i = 0; i < EnemiesThisWave; i++)
@@ -120,6 +123,11 @@ void AWaveManager::SpawnWave()
 			if (UHealthComponent* HealthComp = NewNPC->FindComponentByClass<UHealthComponent>())
 			{
 				HealthComp->OnActorDied.AddDynamic(this, &AWaveManager::RegisterNPCDeath);
+			} else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Spawned NPC does not have a HealthComponent!"));
+				AliveNPCs.Remove(NewNPC);
+				NewNPC->Destroy();
 			}
 		}
 	}

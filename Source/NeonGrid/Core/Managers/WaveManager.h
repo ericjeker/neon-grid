@@ -16,7 +16,7 @@ public:
 	void RegisterNPCDeath(AActor* DeadNPC);
     
 	UFUNCTION(BlueprintCallable, Category = "Wave System")
-	int32 GetAliveNPCCount() const { return AliveNPCs.Num(); }
+	int32 GetAliveNPCCount() { CleanUpInvalidNPCs(); return AliveNPCs.Num(); }
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Wave System")
 	void OnNPCDeath(AActor* DeadNPC);
@@ -25,9 +25,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	void FindSpawnAndPatrolPoints();
-	
+	void CleanUpInvalidNPCs();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave System")
 	int32 NPCsPerWave = 3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave System")
+	int32 MaxNPCsPerWave = 12;
     
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave System")
 	TSubclassOf<AActor> NPCClass;
