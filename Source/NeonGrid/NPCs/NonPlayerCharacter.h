@@ -8,6 +8,7 @@
 #include "NeonGrid/Core/NeonCharacter.h"
 #include "NeonGrid/NPCs/Behaviors/Patrol/PatrolRoute.h"
 #include "NPCArchetypeData.h"
+#include "NeonGrid/Combat/WeaponData.h"
 
 #include "NonPlayerCharacter.generated.h"
 
@@ -59,7 +60,10 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	TObjectPtr<UNPCArchetypeData> ArchetypeData;
-	
+
+	/**
+	 * TODO: replace by a PatrolRouteComponent
+	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	UPatrolPointsComponent* PatrolPointsComponent;
 

@@ -45,23 +45,29 @@ namespace NeonGridAIKeys
 	const FName TargetActor = TEXT("TargetActor");
 	const FName TargetDistance = TEXT("TargetDistance");
 	const FName TimeLastSawTarget = TEXT("TimeLastSawTarget");
-	
+
 	// Spatial Awareness
 	const FName OriginLocation = TEXT("OriginLocation");
 	const FName LastKnownLocation = TEXT("LastKnownLocation");
-	const FName PatrolLocation = TEXT("PatrolLocation");
 
 	// Behavior
 	const FName IsEngaging = TEXT("IsEngaging");
 	const FName CurrentAlertLevel = TEXT("CurrentAlertLevel");
-	
+
 	// Tactical
 	const FName PreferredCoverPoint = TEXT("PreferredCoverPoint");
-	
+
 	// Patrolling
+	const FName PatrolLocation = TEXT("PatrolLocation");
 	const FName ShouldPatrolFromOrigin = TEXT("ShouldPatrolFromOrigin");
 	const FName PatrolPointIndex = TEXT("PatrolPointIndex");
 	const FName IsReversingPatrol = TEXT("IsReversingPatrol");
+
+	// Weapons
+	const FName WeaponOptimalRange = TEXT("WeaponOptimalRange");
+	const FName WeaponMinRange = TEXT("WeaponMinRange");
+	const FName WeaponMaxRange = TEXT("WeaponMaxRange");
+	const FName WeaponFireRate = TEXT("WeaponFireRate");
 }
 
 UENUM(BlueprintType)

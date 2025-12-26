@@ -91,7 +91,7 @@ void AWaveManager::SpawnWave()
 			continue;
 		}
 
-		AActor* SpawnPoint = SpawnPointPtr.Get();
+		const AActor* SpawnPoint = SpawnPointPtr.Get();
 
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -123,7 +123,8 @@ void AWaveManager::SpawnWave()
 			if (UHealthComponent* HealthComp = NewNPC->FindComponentByClass<UHealthComponent>())
 			{
 				HealthComp->OnActorDied.AddDynamic(this, &AWaveManager::RegisterNPCDeath);
-			} else
+			}
+			else
 			{
 				UE_LOG(LogTemp, Error, TEXT("Spawned NPC does not have a HealthComponent!"));
 				AliveNPCs.Remove(NewNPC);

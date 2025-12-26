@@ -44,6 +44,7 @@ void UFireProjectileAbility::SpawnProjectile_Implementation()
 	ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
 	const FGameplayAbilityActivationInfo ActivationInfo = GetCurrentActivationInfo();
 	
+	// TODO: Use WeaponData in the Pawn to know which ProjectileClass to spawn
 	if (HasAuthority(&ActivationInfo) && Character && ProjectileClass && GetWorld())
 	{
 		const FVector SpawnLocation = Character->GetActorLocation() + (Character->GetActorForwardVector() * 100.0f);
