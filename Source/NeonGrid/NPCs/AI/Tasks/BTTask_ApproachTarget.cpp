@@ -33,8 +33,12 @@ EBTNodeResult::Type UBTTask_ApproachTarget::ExecuteTask(UBehaviorTreeComponent& 
 	}
 
 	const UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
+	if (!BlackboardComp)
+	{
+		return EBTNodeResult::Failed;
+	}
+	
 	AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
-
 	if (!TargetActor)
 	{
 		return EBTNodeResult::Failed;
@@ -76,11 +80,20 @@ EBTNodeResult::Type UBTTask_ApproachTarget::ExecuteTask(UBehaviorTreeComponent& 
 void UBTTask_ApproachTarget::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	AAIController* AIController = OwnerComp.GetAIOwner();
+	if (!AIController)
+	{
+		return;
+	}
+	
 	const APawn* ControlledPawn = AIController ? AIController->GetPawn() : nullptr;
 	const UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
+	if (!ControlledPawn || !BlackboardComp)
+	{
+		return;
+	}
+	
 	const AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
-
-	if (!ControlledPawn || !TargetActor)
+	if (!TargetActor)
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 		return;
