@@ -7,8 +7,9 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
-#include "NeonGrid/Combat/Components/HealthComponent.h"
 
+#include "NeonGrid/Combat/Components/HealthComponent.h"
+#include "NeonGrid/Combat/Components/WeaponEquipmentComponent.h"
 #include "NeonGrid/Core/NeonGridEnums.h"
 
 #include "NeonCharacter.generated.h"
@@ -60,8 +61,20 @@ protected:
 	UPROPERTY()
 	class UCoreAttributeSet* AttributeSet;
 
+	/**
+	 * Manages the health system for the character, including tracking health via the attribute set,
+	 * determining whether the character is dead, and broadcasting death events.
+	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	UHealthComponent* HealthComponent;
+
+	/**
+	 * Handles weapon-related equipment and management for the character.
+	 * Facilitates equipping new weapons and tracking the currently equipped weapon.
+	 * Can also update relevant systems (e.g., AI blackboard) when weapon changes occur.
+	 */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	UWeaponEquipmentComponent* WeaponEquipmentComponent;
 
 private:
 	// Tracks granted abilities to remove them if needed

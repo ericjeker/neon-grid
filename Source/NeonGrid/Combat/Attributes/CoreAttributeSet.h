@@ -14,6 +14,9 @@ GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+/** Delegate signature for damage taken events */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDamageTakenDelegate, AActor*, DamageInstigator, float, DamageAmount);
+
 UCLASS()
 class NEONGRID_API UCoreAttributeSet : public UAttributeSet
 {
@@ -35,6 +38,10 @@ public:
 	FGameplayAttributeData Damage;
 	ATTRIBUTE_ACCESSORS(UCoreAttributeSet, Damage);
 	
+	/** Delegate broadcast when damage is taken */
+	UPROPERTY(BlueprintAssignable, Category = "Attributes|Events")
+	FOnDamageTakenDelegate OnDamageTaken;
+	
 	// This handles logic like clamping Health between 0 and MaxHealth when it changes
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 
@@ -44,4 +51,8 @@ public:
 protected:
 	/** Checks whether the owning actor of this attribute set should be considered dead. */
 	void CheckOwnerForDeath() const;
+
+private:
+	void ExecuteDamageEffect(const struct FGameplayEffectModCallbackData& Data);
+	void ExecuteHealthEffect();
 };

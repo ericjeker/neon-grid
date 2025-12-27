@@ -31,8 +31,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Perception")
 	float PeripheralVisionDegrees = 70.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI|Patrol")
 	bool bShouldPatrolFromOrigin = true;
 
-	// stats, movement speeds, etc.
+	/** How long the NPC stays in combat mode after losing sight of the target */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI|Combat")
+	float CombatTimeout = 10.f;
+
+	/** 
+	 * Minimum time between shots (seconds)
+	 * @deprecated Use WeaponData in the Pawn to know which FireRate to use
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="AI|Combat")
+	float FireRate = 1.5f;
 };

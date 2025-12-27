@@ -10,6 +10,7 @@
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Int.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
+#include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
 #include "NeonGrid/NPCs/NonPlayerCharacter.h"
 #include "NeonGrid/NPCs/NPCArchetypeData.h"
 
@@ -68,6 +69,21 @@ void ANonPlayerController::OnPossess(APawn* InPawn)
 		return;
 	}
 
+	// Subscribe to damage events via GAS AttributeSet
+	if (IAbilitySystemInterface* ASI = Cast<IAbilitySystemInterface>(InPawn))
+	{
+		if (UAbilitySystemComponent* ASC = ASI->GetAbilitySystemComponent())
+		{
+			// Find the CoreAttributeSet
+			const UCoreAttributeSet* AttributeSet = ASC->GetSet<UCoreAttributeSet>();
+			if (AttributeSet)
+			{
+				// Bind to damage delegate
+				const_cast<UCoreAttributeSet*>(AttributeSet)->OnDamageTaken.AddDynamic(this, &ANonPlayerController::OnDamageTaken);
+			}
+		}
+	}
+
 	// Start Behavior Tree
 	if (Config->BehaviorTree)
 	{
@@ -120,7 +136,7 @@ ETeamAttitude::Type ANonPlayerController::GetTeamAttitudeTowards(const AActor& O
  * @param Actor The actor that was detected by the AI perception system.
  * @param Stimulus The stimulus data associated with the detection, containing information such as location and signal strength.
  */
-void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
+void ANonPlayerController::OnTargetDetected_Implementation(AActor* Actor, FAIStimulus Stimulus)
 {
 	UBlackboardComponent* BB = GetBlackboardComponent();
 	if (!BB) { return; }
@@ -140,6 +156,9 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 
 			// Store the current time when seeing the target
 			BB->SetValueAsFloat(NeonGridAIKeys::TimeLastSawTarget, GetWorld()->GetTimeSeconds());
+			
+			// Change the behavior: Engage
+			BB->SetValueAsBool(NeonGridAIKeys::IsEngaging, true);
 
 			// Logic for when an ENEMY is seen (Attack, Chase, etc.)
 			UE_LOG(LogTemp, Warning, TEXT("Hostile Detected: %s"), *Actor->GetName());
@@ -171,6 +190,42 @@ void ANonPlayerController::OnTargetDetected(AActor* Actor, FAIStimulus Stimulus)
 			UE_LOG(LogTemp, Warning, TEXT("Lost sight of hostile: %s. Investigating last known location."),
 			       *Actor->GetName());
 		}
+	}
+}
+
+/**
+ * Called when the NPC takes damage. This triggers combat behavior and updates the Blackboard
+ * to respond to the damage source, even if the attacker is not yet visible.
+ *
+ * @param DamageInstigator The actor responsible for dealing damage
+ * @param DamageAmount The amount of damage received
+ */
+void ANonPlayerController::OnDamageTaken_Implementation(AActor* DamageInstigator, float DamageAmount)
+{
+	if (!DamageInstigator)
+	{
+		return;
+	}
+
+	UBlackboardComponent* BB = GetBlackboardComponent();
+	if (!BB)
+	{
+		return;
+	}
+
+	// Check our attitude towards the attacker
+	const ETeamAttitude::Type Attitude = GetTeamAttitudeTowards(*DamageInstigator);
+
+	if (Attitude == ETeamAttitude::Hostile)
+	{
+		// Interrupt current behavior and enter combat mode
+		BB->SetValueAsBool(NeonGridAIKeys::IsEngaging, true);
+		BB->SetValueAsObject(NeonGridAIKeys::TargetActor, DamageInstigator);
+		BB->SetValueAsVector(NeonGridAIKeys::LastKnownLocation, DamageInstigator->GetActorLocation());
+		BB->SetValueAsFloat(NeonGridAIKeys::TimeLastSawTarget, GetWorld()->GetTimeSeconds());
+
+		UE_LOG(LogTemp, Warning, TEXT("NPC %s taking damage from %s! Entering combat mode."),
+		       *GetPawn()->GetName(), *DamageInstigator->GetName());
 	}
 }
 

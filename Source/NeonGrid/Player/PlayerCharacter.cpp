@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "NeonGrid/Core/NeonGameplayTags.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 
@@ -55,6 +56,9 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Make the player invulnerable (for testing purpose)
+	AbilitySystemComponent->AddLooseGameplayTag(FNeonGameplayTags::Get().State_Invulnerable);
 }
 
 void APlayerCharacter::Move(const FVector2D& MovementVector)

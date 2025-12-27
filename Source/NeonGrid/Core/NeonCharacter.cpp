@@ -3,9 +3,10 @@
 #include "NeonCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+
+#include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
+
 
 // Sets default values
 ANeonCharacter::ANeonCharacter()
@@ -35,6 +36,9 @@ ANeonCharacter::ANeonCharacter()
 	
 	// Health component initialization
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	
+	// Weapon equipment component initialization
+	WeaponEquipmentComponent = CreateDefaultSubobject<UWeaponEquipmentComponent>(TEXT("WeaponEquipmentComponent"));
 }
 
 UAbilitySystemComponent* ANeonCharacter::GetAbilitySystemComponent() const
@@ -67,9 +71,8 @@ void ANeonCharacter::GiveDefaultAbilities()
 	for (const auto& AbilityPair : DefaultAbilities)
 	{
 		EAbilityInputID InputID = AbilityPair.Key;
-		TSubclassOf<UGameplayAbility> AbilityClass = AbilityPair.Value;
 
-		if (AbilityClass)
+		if (const TSubclassOf<UGameplayAbility> AbilityClass = AbilityPair.Value)
 		{
 			// Grant the ability and bind it to the Input ID from the enum
 			FGameplayAbilitySpec AbilitySpec(AbilityClass, 1, static_cast<int32>(InputID), this);

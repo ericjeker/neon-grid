@@ -59,7 +59,10 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Config")
 	TObjectPtr<UNPCArchetypeData> ArchetypeData;
-	
+
+	/**
+	 * TODO: replace by a PatrolRouteComponent
+	 */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	UPatrolPointsComponent* PatrolPointsComponent;
 

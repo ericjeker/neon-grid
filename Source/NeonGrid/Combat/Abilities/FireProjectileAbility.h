@@ -26,11 +26,10 @@ public:
 	void SpawnProjectile();
 	
 protected:
-	/** Class of projectile to spawn */
+	/** 
+	 * Class of projectile to spawn 
+	 * @deprecated Use WeaponData in the Pawn to know which ProjectileClass to spawn
+	 */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability|Projectile")
 	TSubclassOf<class ABaseProjectile> ProjectileClass;
-
-	/** TODO: Montage to play when firing */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability|Projectile")
-	UAnimMontage* FireMontage;
 };

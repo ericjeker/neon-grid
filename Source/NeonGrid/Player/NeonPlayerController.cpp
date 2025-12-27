@@ -96,15 +96,15 @@ void ANeonPlayerController::Tick(float DeltaTime)
 	FHitResult TraceHitResult;
 	if (GetHitResultUnderCursor(ECC_Visibility, false, TraceHitResult))
 	{
-		if (APawn* ControlledPawn = GetPawn())
+		if (APawn* ControlledChar = GetPawn())
 		{
 			const FVector TargetLocation = TraceHitResult.ImpactPoint;
-			FVector LookDir = TargetLocation - ControlledPawn->GetActorLocation();
+			FVector LookDir = TargetLocation - ControlledChar->GetActorLocation();
 			LookDir.Z = 0.0f;
 
 			if (!LookDir.IsNearlyZero())
 			{
-				ControlledPawn->SetActorRotation(LookDir.Rotation());
+				ControlledChar->SetActorRotation(LookDir.Rotation());
 			}
 		}
 	}
@@ -118,6 +118,7 @@ void ANeonPlayerController::Move(const FInputActionValue& Value)
 	}
 }
 
+/** Called only when using a gamepad. */
 void ANeonPlayerController::Look(const FInputActionValue& Value)
 {
 	if (APlayerCharacter* ControlledChar = Cast<APlayerCharacter>(GetPawn()))
