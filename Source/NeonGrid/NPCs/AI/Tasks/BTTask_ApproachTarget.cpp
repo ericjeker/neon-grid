@@ -89,7 +89,7 @@ void UBTTask_ApproachTarget::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	const UPathFollowingComponent* PathComp = AIController->GetPathFollowingComponent();
     
 	// Check if the movement system has given up
-	if (PathComp->GetStatus() == EPathFollowingStatus::Idle)
+	if (!PathComp || PathComp->GetStatus() == EPathFollowingStatus::Idle)
 	{
 		// If we are Idle but NOT at our destination, we are stuck
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);

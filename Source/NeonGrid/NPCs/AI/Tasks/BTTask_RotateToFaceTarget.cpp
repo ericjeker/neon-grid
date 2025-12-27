@@ -28,8 +28,12 @@ EBTNodeResult::Type UBTTask_RotateToFaceTarget::ExecuteTask(UBehaviorTreeCompone
 
 	// Get target from Blackboard
 	const UBlackboardComponent* BlackboardComp = OwnerComp.GetBlackboardComponent();
-	AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
+	if (!BlackboardComp)
+	{
+		return EBTNodeResult::Failed;
+	}
 	
+	AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(TargetActorKey.SelectedKeyName));
 	if (!TargetActor)
 	{
 		return EBTNodeResult::Failed;
