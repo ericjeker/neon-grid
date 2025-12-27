@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "NeonGrid/Core/NeonGridEnums.h"
 
@@ -27,6 +28,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	
+	/** The Widget class we want to use for our HUD */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+
+	/** The actual instance of the HUD */
+	UPROPERTY()
+	UUserWidget* HUDWidgetInstance;
 
 	/** Input Mapping Context to be used for player input */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")

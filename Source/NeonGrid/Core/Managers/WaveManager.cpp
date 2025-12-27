@@ -5,6 +5,8 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "NeonGrid/Combat/Components/HealthComponent.h"
+#include "NeonGrid/Core/NeonGameMode.h"
+#include "NeonGrid/Core/NeonGameState.h"
 
 
 // Sets default values
@@ -20,7 +22,6 @@ void AWaveManager::BeginPlay()
 	Super::BeginPlay();
 
 	FindSpawnAndPatrolPoints();
-	SpawnWave();
 }
 
 void AWaveManager::FindSpawnAndPatrolPoints()
@@ -73,12 +74,21 @@ void AWaveManager::SpawnWave()
 		UE_LOG(LogTemp, Error, TEXT("WaveManager: Missing NPCClass or SpawnPoints!"));
 		return;
 	}
+	
+	// Push data to GameState for the UI
+	ANeonGameState* GS = GetWorld()->GetGameState<ANeonGameState>();
+	if (!GS)
+	{
+		return;
+	}
 
-	CurrentWaveNumber++;
-
+	const int32 CurrentWaveNumber = GS->NextWave();
+    
 	// Spawn more enemies each wave, but clamp to maximum
 	const int32 EnemiesThisWave = FMath::Min(NPCsPerWave + (CurrentWaveNumber - 1), MaxNPCsPerWave);
 	UE_LOG(LogTemp, Log, TEXT("Spawning Wave %d with %d NPCs"), CurrentWaveNumber, EnemiesThisWave);
+	
+	GS->SetEnemiesRemaining(EnemiesThisWave);
 
 	for (int32 i = 0; i < EnemiesThisWave; i++)
 	{
@@ -140,6 +150,17 @@ void AWaveManager::RegisterNPCDeath(AActor* DeadNPC)
 	{
 		AliveNPCs.Remove(DeadNPC);
 		UE_LOG(LogTemp, Log, TEXT("NPC died. Remaining: %d"), AliveNPCs.Num());
+
+		if (ANeonGameState* GS = GetWorld()->GetGameState<ANeonGameState>())
+		{
+			GS->SetEnemiesRemaining(AliveNPCs.Num());
+		}
+		
+		// Tell GameMode to handle scoring
+		if (ANeonGameMode* GM = GetWorld()->GetAuthGameMode<ANeonGameMode>())
+		{
+			GM->OnNPCKilled(100); // Or get a value from the NPC itself
+		}
 
 		CheckAndSpawnWave();
 	}

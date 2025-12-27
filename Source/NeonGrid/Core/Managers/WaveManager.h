@@ -18,6 +18,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Wave System")
 	int32 GetAliveNPCCount() { CleanUpInvalidNPCs(); return AliveNPCs.Num(); }
 
+	UFUNCTION(BlueprintCallable, Category = "Wave System")
+	void SpawnWave();
+    
 	UFUNCTION(BlueprintNativeEvent, Category = "Wave System")
 	void OnNPCDeath(AActor* DeadNPC);
     
@@ -42,9 +45,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave System")
 	FName PatrolPointTag = "NPCPatrolPoint";
     
-	UPROPERTY(BlueprintReadOnly, Category = "Wave System")
-	int32 CurrentWaveNumber = 0;
-    
 private:
 	TArray<TWeakObjectPtr<AActor>> SpawnPoints;
 	TArray<TWeakObjectPtr<AActor>> PatrolPoints;
@@ -52,8 +52,5 @@ private:
     
 	UFUNCTION()
 	void CheckAndSpawnWave();
-    
-	UFUNCTION()
-	void SpawnWave();
     
 };

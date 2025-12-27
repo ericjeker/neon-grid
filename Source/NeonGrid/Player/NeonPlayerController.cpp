@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "PlayerCharacter.h"
+#include "Blueprint/UserWidget.h"
 
 ANeonPlayerController::ANeonPlayerController()
 {
@@ -18,6 +19,16 @@ void ANeonPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Only create the HUD on the local machine (not the server)
+	if (IsLocalController() && HUDWidgetClass)
+	{
+		HUDWidgetInstance = CreateWidget<UUserWidget>(this, HUDWidgetClass);
+		if (HUDWidgetInstance)
+		{
+			HUDWidgetInstance->AddToViewport();
+		}
+	}
+	
 	// Setup Input Mode
 	FInputModeGameAndUI InputMode;
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
