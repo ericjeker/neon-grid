@@ -37,16 +37,20 @@ void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 void UCoreAttributeSet::ExecuteDamageEffect(const struct FGameplayEffectModCallbackData& Data)
 {
 	if (!GetOwningActor()) return;
-	
+
 	// Check for the Invulnerable tag on the target (the owner of this AttributeSet)
 	const FGameplayTag InvulnerableTag = FNeonGameplayTags::Get().State_Invulnerable;
 	if (Data.Target.HasMatchingGameplayTag(InvulnerableTag))
 	{
 		SetDamage(0.f);
-		UE_LOG(LogTemp, Warning, TEXT("Damage effect ignored on %s because it is Invulnerable!"), *GetOwningActor()->GetName());
-		return;
+		UE_LOG(LogTemp, Warning, TEXT("Damage effect ignored on %s because it is Invulnerable!"),
+		       *GetOwningActor()->GetName());
 	}
-	
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Damage effect applied on %s!"), *GetOwningActor()->GetName());
+	}
+
 	// Store the damage amount and clear the meta-attribute
 	const float LocalDamageDone = GetDamage();
 	SetDamage(0.f);
@@ -56,7 +60,7 @@ void UCoreAttributeSet::ExecuteDamageEffect(const struct FGameplayEffectModCallb
 		// Apply the health change
 		const float NewHealth = GetHealth() - LocalDamageDone;
 		SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
-			
+
 		// Get the instigator from the effect context
 		AActor* DamageInstigator = nullptr;
 		if (Data.EffectSpec.GetContext().GetInstigator())
@@ -79,7 +83,7 @@ void UCoreAttributeSet::ExecuteHealthEffect()
 {
 	// Clamp again to be safe after modifiers
 	SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-		
+
 	// Check for death even on direct health modification
 	CheckOwnerForDeath();
 }
