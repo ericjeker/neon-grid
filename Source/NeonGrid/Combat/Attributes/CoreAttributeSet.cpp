@@ -3,7 +3,7 @@
 
 #include "CoreAttributeSet.h"
 #include "GameplayEffectExtension.h"
-#include "NeonGrid/Core/NeonCharacter.h"
+#include "NeonGrid/Core/Characters/NeonCharacter.h"
 #include "NeonGrid/Core/NeonGameplayTags.h"
 
 UCoreAttributeSet::UCoreAttributeSet() : Health(100.f), MaxHealth(100.f)

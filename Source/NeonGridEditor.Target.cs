@@ -5,11 +5,17 @@ using System.Collections.Generic;
 
 public class NeonGridEditorTarget : TargetRules
 {
-	public NeonGridEditorTarget( TargetInfo Target) : base(Target)
+	public NeonGridEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V6;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
 		ExtraModuleNames.Add("NeonGrid");
+		RegisterModules();
+	}
+
+	private void RegisterModules()
+	{
+		ExtraModuleNames.AddRange(["NeonInventory"]);
 	}
 }

@@ -10,15 +10,12 @@ public class NeonGrid : ModuleRules
 
 		PublicDependencyModuleNames.AddRange([
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTags",
-			"GameplayTasks", "AIModule", "NavigationSystem", "UMG"
+			"GameplayTasks", "AIModule", "NavigationSystem", "UMG", "NeonInventory"
 		]);
 
 		PrivateDependencyModuleNames.AddRange([
 			"Slate", "SlateCore"
 		]);
-
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");

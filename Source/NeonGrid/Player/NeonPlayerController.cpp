@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "PlayerCharacter.h"
+#include "NeonPlayerCharacter.h"
 #include "Blueprint/UserWidget.h"
 
 ANeonPlayerController::ANeonPlayerController()
@@ -123,7 +123,7 @@ void ANeonPlayerController::Tick(float DeltaTime)
 
 void ANeonPlayerController::Move(const FInputActionValue& Value)
 {
-	if (APlayerCharacter* ControlledChar = Cast<APlayerCharacter>(GetPawn()))
+	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
 		ControlledChar->Move(Value.Get<FVector2D>());
 	}
@@ -132,7 +132,7 @@ void ANeonPlayerController::Move(const FInputActionValue& Value)
 /** Called only when using a gamepad. */
 void ANeonPlayerController::Look(const FInputActionValue& Value)
 {
-	if (APlayerCharacter* ControlledChar = Cast<APlayerCharacter>(GetPawn()))
+	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
 		ControlledChar->Look(Value.Get<FVector2D>());
 	}

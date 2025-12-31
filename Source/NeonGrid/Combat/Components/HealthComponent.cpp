@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NeonGrid/Combat/Attributes/CoreAttributeSet.h"
-#include "NeonGrid/Core/NeonCharacter.h"
+#include "NeonGrid/Core/Characters/NeonCharacter.h"
 
 
 UHealthComponent::UHealthComponent()

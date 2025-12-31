@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 
-#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "NeonGrid/Core/NeonGridEnums.h"
 
@@ -11,6 +10,7 @@
 // Forward declarations
 class UInputMappingContext;
 class UInputAction;
+class UUserWidget;
 struct FInputActionValue;
 
 /** Custom player controller for the NeonGrid game */
@@ -18,17 +18,17 @@ UCLASS()
 class NEONGRID_API ANeonPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 public:
 	ANeonPlayerController();
-	
+
 	// Override to setup input bindings
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
-	
+
 	/** The Widget class we want to use for our HUD */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<UUserWidget> HUDWidgetClass;
@@ -52,12 +52,12 @@ protected:
 	/** Fire Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* FireAction;
-	
+
 private:
 	/** Input Handlers */
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	
+
 	/** GAS Input Handlers */
 	void AbilityPressed(EAbilityInputID InputId);
 	void AbilityReleased(EAbilityInputID InputId);

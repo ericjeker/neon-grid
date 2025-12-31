@@ -5,22 +5,22 @@
 #include "CoreMinimal.h"
 #include "GenericTeamAgentInterface.h"
 
-#include "NeonGrid/Core/NeonCharacter.h"
+#include "NeonGrid/Core/Characters/NeonCharacter.h"
 #include "NeonGrid/Core/NeonGridEnums.h"
 
-#include "PlayerCharacter.generated.h"
+#include "NeonPlayerCharacter.generated.h"
 
 /**
  * Represents a player-controlled character extending from ANeonCharacter.
  * Supports functionality for movement, input configuration, and basic actions.
  */
 UCLASS()
-class NEONGRID_API APlayerCharacter : public ANeonCharacter, public IGenericTeamAgentInterface
+class NEONGRID_API ANeonPlayerCharacter : public ANeonCharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
 public:
-	APlayerCharacter();
+	ANeonPlayerCharacter();
 
 	/** 
 	 * Moves the character relative to the camera orientation.
@@ -46,9 +46,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* FollowCamera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	class UNeonInventoryComponent* InventoryComponent;
 };
