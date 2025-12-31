@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "NeonInventoryItemDefinition.h"
+#include "NeonItemDefinition.h"
 #include "NeonInventoryTypes.generated.h"
 
 USTRUCT(BlueprintType)
@@ -11,17 +11,17 @@ struct FNeonInventorySlot
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UNeonInventoryItemDefinition> ItemDefinition;
+	TObjectPtr<UNeonItemInstance> Item;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Quantity;
 
 	// Default constructor
-	FNeonInventorySlot() : ItemDefinition(nullptr), Quantity(0) {}
+	FNeonInventorySlot() : Item(nullptr), Quantity(0) {}
 	
 	// Constructor with parameters to allow brace initialization
-	FNeonInventorySlot(UNeonInventoryItemDefinition* InItem, int32 InQuantity)
-		: ItemDefinition(InItem), Quantity(InQuantity) {}
+	FNeonInventorySlot(UNeonItemInstance* InItem, const int32 InQuantity)
+		: Item(InItem), Quantity(InQuantity) {}
 };
 
 UENUM(BlueprintType)

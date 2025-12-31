@@ -1,8 +1,9 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "NeonInventoryComponent.h"
-#include "NeonInventoryItemDefinition.h"
+#include "Components/NeonInventoryComponent.h"
+
+#include "NeonItemDefinition.h"
 #include "NeonInventoryTypes.h"
 
 
@@ -16,7 +17,7 @@ UNeonInventoryComponent::UNeonInventoryComponent()
 	// ...
 }
 
-ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonInventoryItemDefinition* Item, int32 Quantity)
+ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonItemDefinition* Item, int32 Quantity)
 {
 	if (!Item || Quantity <= 0)
 	{
@@ -66,7 +67,7 @@ ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonInventoryItemDefiniti
 	return ENeonInventoryResult::Success;
 }
 
-ENeonInventoryResult UNeonInventoryComponent::RemoveItem(UNeonInventoryItemDefinition* Item, int32 Quantity)
+ENeonInventoryResult UNeonInventoryComponent::RemoveItem(UNeonItemDefinition* Item, int32 Quantity)
 {
 	if (!Item || Quantity <= 0)
 	{
