@@ -14,7 +14,7 @@ public class NeonGrid : ModuleRules
 		]);
 
 		PrivateDependencyModuleNames.AddRange([
-			"Slate", "SlateCore"
+			"Slate", "SlateCore", "AnimGraphRuntime"
 		]);
 
 		// Uncomment if you are using online features
