@@ -94,17 +94,3 @@ void ANeonPlayerCharacter::Look(const FVector2D& LookVector)
 	const FRotator LookAtRotation = FVector(LookVector.Y, LookVector.X, 0.0f).Rotation();
 	SetActorRotation(LookAtRotation);
 }
-
-void ANeonPlayerCharacter::Interact(const FInputActionValue& Value) const
-{
-	UNeonInteractionComponent* InteractionComp = FindComponentByClass<UNeonInteractionComponent>();
-	if (!InteractionComp)
-	{
-		return;
-	}
-
-	if (AActor* ClosestInteractable = InteractionComp->GetClosestInteractable())
-	{
-		InteractionComp->Interact(ClosestInteractable);
-	}
-}

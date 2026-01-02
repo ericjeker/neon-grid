@@ -37,12 +37,6 @@ public:
 	 */
 	void Look(const FVector2D& LookVector);
 
-	/**
-	 * 
-	 * @param Value 
-	 */
-	void Interact(const FInputActionValue& Value) const;
-
 	/** IGenericTeamAgentInterface implementation */
 	virtual FGenericTeamId GetGenericTeamId() const override
 	{
