@@ -31,8 +31,10 @@ void UNeonGameplayAbility_Interact::ActivateAbility(const FGameplayAbilitySpecHa
 	if (UNeonInteractionComponent* InteractionComp = AvatarActor->FindComponentByClass<UNeonInteractionComponent>())
 	{
 		// 3. Use the Component logic we wrote earlier
-		if (AActor* Target = InteractionComp->GetClosestInteractable())
+		if (AActor* Target = InteractionComp->GetInteractableUnderCursor(true))
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Interacting with %s"), *Target->GetName());
+			
 			// Perform the interaction (Validate & Execute)
 			InteractionComp->Interact(Target);
 		}

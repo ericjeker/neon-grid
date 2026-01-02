@@ -32,10 +32,10 @@ AActor* UNeonInteractionComponent::GetClosestInteractable()
 		return nullptr;
 	}
 
-	// Get all overlapping actors within 3 meters
+	// Get all overlapping actors within the search radius
 	TArray<FOverlapResult> HitResults;
 	const FVector OwnerLocation = Owner->GetActorLocation();
-	FCollisionShape Sphere = FCollisionShape::MakeSphere(SearchRadius); // TODO: radius configurable
+	const FCollisionShape Sphere = FCollisionShape::MakeSphere(SearchRadius);
 
 	// Perform the overlap query
 	World->OverlapMultiByChannel(
@@ -57,25 +57,13 @@ AActor* UNeonInteractionComponent::GetClosestInteractable()
 		{
 			continue;
 		}
-		
-		// We accept the actor if:
-		// 1. The Actor itself implements the interface OR
-		// 2. The Actor has a component that implements the interface
-		bool bIsInteractable = Actor->Implements<UNeonInteractableInterface>();
-		
-		if (!bIsInteractable)
-		{
-			// Check for the interactable component
-			bIsInteractable = (Actor->FindComponentByClass<UNeonInteractableComponent>() != nullptr);
-		}
 
-		if (!bIsInteractable)
+		if (!IsActorInteractable(Actor))
 		{
 			continue;
 		}
 		
 		// Calculate the distance between the Owner and the Actor 
-		UE_LOG(LogTemp, Warning, TEXT("Found interactable actor: %s"), *Actor->GetName());
 		const float DistanceSq = FVector::DistSquared(OwnerLocation, Actor->GetActorLocation());
 		if (DistanceSq < ClosestDistanceSq)
 		{
@@ -83,8 +71,94 @@ AActor* UNeonInteractionComponent::GetClosestInteractable()
 			ClosestActor = Actor;
 		}
 	}
-	
+
 	return ClosestActor;
+}
+
+AActor* UNeonInteractionComponent::GetInteractableUnderCursor(const bool bCheckLineOfSight)
+{
+	const AActor* Owner = GetOwner();
+	if (!Owner)
+	{
+		return nullptr;
+	}
+
+	const APawn* OwnerPawn = Cast<APawn>(Owner);
+	if (!OwnerPawn)
+	{
+		return nullptr;
+	}
+
+	// We need the PlayerController to access the mouse position
+	const APlayerController* PC = Cast<APlayerController>(OwnerPawn->GetController());
+	if (!PC)
+	{
+		return nullptr;
+	}
+
+	FHitResult HitResult;
+	// Trace against Visibility channel (standard for mouse picking)
+	// TODO: make the TraceChannel configurable
+	if (PC->GetHitResultUnderCursor(ECC_Visibility, false, HitResult))
+	{
+		AActor* HitActor = HitResult.GetActor();
+		
+		// Validate the actor using our shared logic
+		if (HitActor && HitActor != Owner && IsActorInteractable(HitActor))
+		{
+			if (bCheckLineOfSight)
+			{
+				// Ensure the Pawn can actually "see" the target (prevents interacting through walls)
+				FHitResult LoSResult;
+				FCollisionQueryParams LoSParams;
+				LoSParams.AddIgnoredActor(Owner);
+
+				const FVector StartLocation = OwnerPawn->GetActorLocation();
+				const FVector EndLocation = HitResult.ImpactPoint;
+
+				// Trace from the Character to the point the mouse clicked
+				const bool bHitOcclusion = GetWorld()->LineTraceSingleByChannel(
+					LoSResult,
+					StartLocation,
+					EndLocation,
+					ECC_Visibility, // Match the visibility channel used by cursor trace
+					LoSParams
+				);
+
+				// If we hit something that ISN'T our target, we are blocked
+				if (bHitOcclusion && LoSResult.GetActor() != HitActor)
+				{
+					return nullptr;
+				}
+			}
+			
+			// Enforce range check even for cursor interaction
+			const float DistanceSq = FVector::DistSquared(Owner->GetActorLocation(), HitActor->GetActorLocation());
+			if (DistanceSq <= SearchRadius * SearchRadius)
+			{
+				return HitActor;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+bool UNeonInteractionComponent::IsActorInteractable(const AActor* Actor) const
+{
+	if (!Actor)
+	{
+		return false;
+	}
+
+	// 1. The Actor itself implements the interface OR
+	if (Actor->Implements<UNeonInteractableInterface>())
+	{
+		return true;
+	}
+
+	// 2. The Actor has a component that implements the interface
+	return (Actor->FindComponentByClass<UNeonInteractableComponent>() != nullptr);
 }
 
 bool UNeonInteractionComponent::Interact(AActor* TargetActor)
@@ -93,12 +167,13 @@ bool UNeonInteractionComponent::Interact(AActor* TargetActor)
 	{
 		return false;
 	}
-	
+
 	APawn* InstigatorPawn = Cast<APawn>(GetOwner());
-	
+
 	// 1. Check Component First (Composition preference)
 	// This finds the first component (e.g. UNeonInteractableComponent)
-	if (UActorComponent* InteractableComp = TargetActor->FindComponentByInterface(UNeonInteractableInterface::StaticClass()))
+	if (UActorComponent* InteractableComp = TargetActor->FindComponentByInterface(
+		UNeonInteractableInterface::StaticClass()))
 	{
 		// Execute on the COMPONENT
 		UE_LOG(LogTemp, Warning, TEXT("Executing interaction on component: %s"), *InteractableComp->GetName());

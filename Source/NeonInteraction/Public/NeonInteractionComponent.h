@@ -23,6 +23,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	AActor* GetClosestInteractable();
 	
+	/** Return the interactable actor currently under the mouse cursor */
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	AActor* GetInteractableUnderCursor(bool bCheckLineOfSight);
+
+	/** Helper to check if an actor is valid for interaction */
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool IsActorInteractable(const AActor* Actor) const;
+	
 	/** Interact with the specified target actor if it implements the UNeonInteractable interface */
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	bool Interact(AActor* TargetActor);
