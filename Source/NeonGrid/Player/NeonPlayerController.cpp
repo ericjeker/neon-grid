@@ -36,7 +36,7 @@ void ANeonPlayerController::BeginPlay()
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
 
-	// Add Mapping Context
+	// Add Input Mapping Context
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
 		GetLocalPlayer()))
 	{
@@ -80,7 +80,7 @@ void ANeonPlayerController::SetupInputComponent()
 		if (InteractAction)
 		{
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this,
-			                                   &ANeonPlayerController::Interact);
+			                                   &ANeonPlayerController::Interact, EAbilityInputID::Interact);
 		}
 	}
 }
@@ -146,11 +146,14 @@ void ANeonPlayerController::Look(const FInputActionValue& Value)
 	}
 }
 
-void ANeonPlayerController::Interact(const FInputActionValue& Value)
+void ANeonPlayerController::Interact(EAbilityInputID InputId)
 {
-	if (const ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
+	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(GetPawn()))
 	{
-		ControlledChar->Interact(Value);
+		if (UAbilitySystemComponent* ASC = ASCInterface->GetAbilitySystemComponent())
+		{
+			ASC->AbilityLocalInputPressed(static_cast<int32>(InputId));
+		}
 	}
 }
 

@@ -11,6 +11,8 @@
 #include "NeonPlayerCharacter.generated.h"
 
 struct FInputActionValue;
+
+
 /**
  * Represents a player-controlled character extending from ANeonCharacter.
  * Supports functionality for movement, input configuration, and basic actions.
@@ -34,8 +36,11 @@ public:
 	 * @param LookVector The input vector for looking (if using gamepad)
 	 */
 	void Look(const FVector2D& LookVector);
-	
-	
+
+	/**
+	 * 
+	 * @param Value 
+	 */
 	void Interact(const FInputActionValue& Value) const;
 
 	/** IGenericTeamAgentInterface implementation */
