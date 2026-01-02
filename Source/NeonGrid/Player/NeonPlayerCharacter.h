@@ -10,6 +10,7 @@
 
 #include "NeonPlayerCharacter.generated.h"
 
+struct FInputActionValue;
 /**
  * Represents a player-controlled character extending from ANeonCharacter.
  * Supports functionality for movement, input configuration, and basic actions.
@@ -33,6 +34,9 @@ public:
 	 * @param LookVector The input vector for looking (if using gamepad)
 	 */
 	void Look(const FVector2D& LookVector);
+	
+	
+	void Interact(const FInputActionValue& Value) const;
 
 	/** IGenericTeamAgentInterface implementation */
 	virtual FGenericTeamId GetGenericTeamId() const override
@@ -52,6 +56,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* FollowCamera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	class UNeonInteractionComponent* InteractionComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	class UNeonInventoryComponent* InventoryComponent;

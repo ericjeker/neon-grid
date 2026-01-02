@@ -5,6 +5,8 @@
 
 #include "NeonItemDefinition.h"
 #include "NeonInventoryTypes.h"
+#include "NeonItemInstance.h"
+#include "Fragments/NeonItemFragment_Inventory.h"
 
 
 // Sets default values for this component's properties
@@ -17,98 +19,61 @@ UNeonInventoryComponent::UNeonInventoryComponent()
 	// ...
 }
 
-ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonItemDefinition* Item, int32 Quantity)
+ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonItemInstance* Item, const int32 Quantity)
 {
 	if (!Item || Quantity <= 0)
 	{
 		return ENeonInventoryResult::Failed_InvalidItem;
 	}
-	
+
+	// Check if we have enough slots
+	if (InventoryContent.Num() >= MaxInventorySize)
+	{
+		return ENeonInventoryResult::Failed_InventoryFull;
+	}
+
+	const UNeonItemFragment_Inventory* InventoryFragment = Item->FindFragment<UNeonItemFragment_Inventory>();
+	if (!InventoryFragment)
+	{
+		return ENeonInventoryResult::Failed_InvalidItem;
+	}
+
 	// Check if we have enough weight capacity
 	const float AvailableWeight = MaxWeightCapacityKg - GetCurrentWeightKg();
-	if (AvailableWeight <= 0.0f || Item->MassKg * Quantity > AvailableWeight)
+	if (AvailableWeight <= 0.0f || InventoryFragment->MassKg * Quantity > AvailableWeight)
 	{
 		return ENeonInventoryResult::Failed_InsufficientWeightCapacity;
 	}
-	
-	// Check if the item already exists 
-	for (FNeonInventorySlot& Slot : InventoryContent)
-	{
-		if (Slot.ItemDefinition == Item)
-		{
-			// Check if we have reached the max stack size
-			const int32 SpaceLeftInStack = Slot.ItemDefinition->MaxStackSize - Slot.Quantity;
-			if (SpaceLeftInStack > 0)
-			{
-				// Add what we can to the stack
-				const int32 AmountToAdd = FMath::Min(Quantity, SpaceLeftInStack);
-				Slot.Quantity += AmountToAdd;
-				Quantity -= AmountToAdd;
-				
-				if (Quantity <= 0)
-				{
-					OnInventoryChanged.Broadcast();
-					return ENeonInventoryResult::Success;
-				}
-			}
-		}
-	}
-	
-	// Add the remaining quantity in new slots
-	while (Quantity > 0)
-	{
-		const int32 AmountForNewSlot = FMath::Min(Quantity, Item->MaxStackSize);
-		InventoryContent.Add({ Item, AmountForNewSlot });
-		Quantity -= AmountForNewSlot;
-	}
-	
+
+	// Add the item to the inventory
+	InventoryContent.Add({Item, Quantity});
+
+	// Broadcast the inventory change event
 	OnInventoryChanged.Broadcast();
-	
+
 	return ENeonInventoryResult::Success;
 }
 
-ENeonInventoryResult UNeonInventoryComponent::RemoveItem(UNeonItemDefinition* Item, int32 Quantity)
+ENeonInventoryResult UNeonInventoryComponent::RemoveItem(UNeonItemInstance* Item, const int32 Quantity)
 {
 	if (!Item || Quantity <= 0)
 	{
 		return ENeonInventoryResult::Failed_InvalidItem;
 	}
-	
-	// Check if we have enough total quantity
-	int32 TotalAvailable = 0;
-	for (const FNeonInventorySlot& Slot : InventoryContent)
-	{
-		if (Slot.ItemDefinition == Item)
-		{
-			TotalAvailable += Slot.Quantity;
-		}
-	}
-	
-	if (TotalAvailable < Quantity)
-	{
-		return ENeonInventoryResult::Failed_InsufficientQuantity;
-	}
-	
+
 	// Remove from slots (iterate backwards to safely remove empty slots)
 	for (int32 i = InventoryContent.Num() - 1; i >= 0 && Quantity > 0; --i)
 	{
 		FNeonInventorySlot& Slot = InventoryContent[i];
-		if (Slot.ItemDefinition == Item)
+		if (Slot.Item == Item)
 		{
-			const int32 AmountToRemove = FMath::Min(Quantity, Slot.Quantity);
-			Slot.Quantity -= AmountToRemove;
-			Quantity -= AmountToRemove;
-			
-			// Remove empty slots
-			if (Slot.Quantity <= 0)
-			{
-				InventoryContent.RemoveAt(i);
-			}
+			InventoryContent.RemoveAt(i);
+			OnInventoryChanged.Broadcast();
+			return ENeonInventoryResult::Success;
 		}
 	}
-	
-	OnInventoryChanged.Broadcast();
-	return ENeonInventoryResult::Success;
+
+	return ENeonInventoryResult::Failed_ItemNotFound;
 }
 
 float UNeonInventoryComponent::GetCurrentWeightKg() const
@@ -117,16 +82,19 @@ float UNeonInventoryComponent::GetCurrentWeightKg() const
 	{
 		return 0.0f;
 	}
-	
+
 	float TotalWeight = 0.0f;
 	for (const FNeonInventorySlot& Slot : InventoryContent)
 	{
-		if (Slot.ItemDefinition)
+		if (Slot.Item)
 		{
-			TotalWeight += Slot.ItemDefinition->MassKg * Slot.Quantity;
+			if (const UNeonItemFragment_Inventory* InventoryFragment = Slot.Item->FindFragment<
+				UNeonItemFragment_Inventory>())
+			{
+				TotalWeight += InventoryFragment->MassKg * Slot.Quantity;
+			}
 		}
 	}
-	
+
 	return TotalWeight;
 }
-

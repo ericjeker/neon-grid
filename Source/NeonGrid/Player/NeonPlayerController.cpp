@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "NeonInteractionComponent.h"
 #include "NeonPlayerCharacter.h"
 #include "Blueprint/UserWidget.h"
 
@@ -28,7 +29,7 @@ void ANeonPlayerController::BeginPlay()
 			HUDWidgetInstance->AddToViewport();
 		}
 	}
-	
+
 	// Setup Input Mode
 	FInputModeGameAndUI InputMode;
 	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
@@ -73,6 +74,13 @@ void ANeonPlayerController::SetupInputComponent()
 			                                   &ANeonPlayerController::AbilityPressed, EAbilityInputID::Fire);
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this,
 			                                   &ANeonPlayerController::AbilityReleased, EAbilityInputID::Fire);
+		}
+
+		// Bind Interact
+		if (InteractAction)
+		{
+			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this,
+			                                   &ANeonPlayerController::Interact);
 		}
 	}
 }
@@ -135,6 +143,14 @@ void ANeonPlayerController::Look(const FInputActionValue& Value)
 	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
 		ControlledChar->Look(Value.Get<FVector2D>());
+	}
+}
+
+void ANeonPlayerController::Interact(const FInputActionValue& Value)
+{
+	if (const ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
+	{
+		ControlledChar->Interact(Value);
 	}
 }
 

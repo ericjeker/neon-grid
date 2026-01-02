@@ -9,7 +9,9 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 
-#include "NeonInventory/Public/NeonInventoryComponent.h"
+#include "NeonInteractionComponent.h"
+#include "Components/NeonInventoryComponent.h"
+
 #include "NeonGrid/Core/NeonGameplayTags.h"
 
 // Sets default values
@@ -52,8 +54,11 @@ ANeonPlayerCharacter::ANeonPlayerCharacter()
 	UAIPerceptionStimuliSourceComponent* StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
 	StimuliSource->RegisterForSense(UAISense_Sight::StaticClass());
 	StimuliSource->RegisterWithPerceptionSystem();
-	
-	// Initialize inventory component
+
+	// Create Interaction Component
+	InteractionComponent = CreateDefaultSubobject<UNeonInteractionComponent>(TEXT("InteractionComponent"));
+
+	// Create inventory component
 	InventoryComponent = CreateDefaultSubobject<UNeonInventoryComponent>(TEXT("InventoryComponent"));
 	InventoryComponent->SetMaxWeightKg(25.0f);
 }
@@ -88,4 +93,18 @@ void ANeonPlayerCharacter::Look(const FVector2D& LookVector)
 	// This logic handles Gamepad look. Mouse look is handled by the Controller Tick trace.
 	const FRotator LookAtRotation = FVector(LookVector.Y, LookVector.X, 0.0f).Rotation();
 	SetActorRotation(LookAtRotation);
+}
+
+void ANeonPlayerCharacter::Interact(const FInputActionValue& Value) const
+{
+	UNeonInteractionComponent* InteractionComp = FindComponentByClass<UNeonInteractionComponent>();
+	if (!InteractionComp)
+	{
+		return;
+	}
+
+	if (AActor* ClosestInteractable = InteractionComp->GetClosestInteractable())
+	{
+		InteractionComp->Interact(ClosestInteractable);
+	}
 }

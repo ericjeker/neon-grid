@@ -3,20 +3,15 @@
 
 #include "NeonItemDefinition.h"
 
-#include "Fragments/NeonItemFragment.h"
-
-
-bool UNeonItemDefinition::ExecutePickupFragments(AActor* Picker, const int32 Quantity) const
+const UNeonItemFragment* UNeonItemDefinition::FindFragmentByClass(TSubclassOf<UNeonItemFragment> FragmentClass) const
 {
-	for (const UNeonItemFragment* Fragment : Fragments)
+	for (const TObjectPtr<UNeonItemFragment>& Fragment : Fragments)
 	{
-		if (Fragment && Fragment->OnItemPickedUp(Picker, const_cast<UNeonItemDefinition*>(this), Quantity))
+		if (Fragment && Fragment->IsA(FragmentClass))
 		{
-			// First fragment that handles it wins
-			return true;
+			return Fragment.Get();
 		}
 	}
-	
-	// No fragment handled it
-	return false;
+
+	return nullptr;
 }

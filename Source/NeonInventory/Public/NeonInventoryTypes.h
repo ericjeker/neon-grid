@@ -10,6 +10,7 @@ struct FNeonInventorySlot
 {
 	GENERATED_BODY()
 	
+	/** The inventory slot contains an item instance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UNeonItemInstance> Item;
 

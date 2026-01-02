@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "NeonItemDefinition.h"
+#include "NeonItemInstance.generated.h"
 
+class UNeonItemFragment;
 
 UCLASS(BlueprintType, Blueprintable)
 class NEONINVENTORY_API UNeonItemInstance : public UObject
@@ -14,7 +16,7 @@ class NEONINVENTORY_API UNeonItemInstance : public UObject
 public:
 	
 	// The static data asset this instance was created from (e.g., DA_Rifle)
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<UNeonItemDefinition> ItemDef;
 	
 	/** 

@@ -50,4 +50,10 @@ public:
 
 		return nullptr;
 	}
+		
+	/** 
+	 * Blueprint Helper: Finds a fragment by class type. 
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Inventory", meta = (DeterminesOutputType = "FragmentClass"))
+	const UNeonItemFragment* FindFragmentByClass(TSubclassOf<UNeonItemFragment> FragmentClass) const;
 };

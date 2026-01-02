@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
  * A component that manages the inventory content, including item addition, removal,
  * weight capacity, and inventory state.
  */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Inventory), meta=(BlueprintSpawnableComponent))
 class NEONINVENTORY_API UNeonInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -28,10 +28,10 @@ public:
 
 	/** Returns true if the item was successfully added */
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	ENeonInventoryResult AddItem(UNeonItemDefinition* Item, int32 Quantity);
+	ENeonInventoryResult AddItem(UNeonItemInstance* Item, int32 Quantity);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	ENeonInventoryResult RemoveItem(UNeonItemDefinition* Item, int32 Quantity);
+	ENeonInventoryResult RemoveItem(UNeonItemInstance* Item, int32 Quantity);
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	float GetCurrentWeightKg() const;
