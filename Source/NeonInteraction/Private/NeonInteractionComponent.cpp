@@ -13,9 +13,26 @@ UNeonInteractionComponent::UNeonInteractionComponent()
 {
 	// Set this component to be initialized when the game starts and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+}
+
+void UNeonInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                              FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// Every frame, check what is under the cursor
+	if (AActor* ActorUnderCursor = GetInteractableUnderCursor(true))
+	{
+		// Update the focus state
+		SetFocusedActor(ActorUnderCursor);
+	}
+	else
+	{
+		SetFocusedActor(nullptr);
+	}
 }
 
 AActor* UNeonInteractionComponent::GetClosestInteractable()
@@ -62,7 +79,7 @@ AActor* UNeonInteractionComponent::GetClosestInteractable()
 		{
 			continue;
 		}
-		
+
 		// Calculate the distance between the Owner and the Actor 
 		const float DistanceSq = FVector::DistSquared(OwnerLocation, Actor->GetActorLocation());
 		if (DistanceSq < ClosestDistanceSq)
@@ -102,7 +119,7 @@ AActor* UNeonInteractionComponent::GetInteractableUnderCursor(const bool bCheckL
 	if (PC->GetHitResultUnderCursor(ECC_Visibility, false, HitResult))
 	{
 		AActor* HitActor = HitResult.GetActor();
-		
+
 		// Validate the actor using our shared logic
 		if (HitActor && HitActor != Owner && IsActorInteractable(HitActor))
 		{
@@ -131,7 +148,7 @@ AActor* UNeonInteractionComponent::GetInteractableUnderCursor(const bool bCheckL
 					return nullptr;
 				}
 			}
-			
+
 			// Enforce range check even for cursor interaction
 			const float DistanceSq = FVector::DistSquared(Owner->GetActorLocation(), HitActor->GetActorLocation());
 			if (DistanceSq <= SearchRadius * SearchRadius)
@@ -189,4 +206,35 @@ bool UNeonInteractionComponent::Interact(AActor* TargetActor)
 	}
 
 	return false;
+}
+
+void UNeonInteractionComponent::SetFocusedActor(AActor* NewActor)
+{
+	// If the focus hasn't changed, do nothing
+	if (NewActor == CurrentFocusedActor)
+	{
+		return;
+	}
+
+	// 1. Unhighlight the OLD actor
+	if (CurrentFocusedActor)
+	{
+		if (CurrentFocusedActor->Implements<UNeonInteractableInterface>())
+		{
+			INeonInteractableInterface::Execute_Unhighlight(CurrentFocusedActor);
+		}
+		// Also handle the component case if needed...
+	}
+
+	// 2. Highlight the NEW actor
+	if (NewActor)
+	{
+		if (NewActor->Implements<UNeonInteractableInterface>())
+		{
+			INeonInteractableInterface::Execute_Highlight(NewActor);
+		}
+	}
+
+	// 3. Update the reference
+	CurrentFocusedActor = NewActor;
 }

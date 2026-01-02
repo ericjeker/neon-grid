@@ -20,6 +20,14 @@ class INeonInteractableInterface : public IInterface
 	GENERATED_BODY()
 
 public:
+	/** Called when the interaction system finds this object (Hover start) */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void Highlight();
+
+	/** Called when the interaction system loses this object (Hover end) */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void Unhighlight();
+	
 	/** 
 	 * Validation function to know if the event can be called 
 	 * 

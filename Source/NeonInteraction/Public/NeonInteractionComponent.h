@@ -15,6 +15,8 @@ class NEONINTERACTION_API UNeonInteractionComponent : public UActorComponent
 public:
 	UNeonInteractionComponent();
 	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	/** Search radius for finding interactable objects */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	float SearchRadius = 300.0f;
@@ -34,4 +36,12 @@ public:
 	/** Interact with the specified target actor if it implements the UNeonInteractable interface */
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	bool Interact(AActor* TargetActor);
+	
+protected:
+	/** The actor currently being highlighted */
+	UPROPERTY(Transient)
+	AActor* CurrentFocusedActor;
+
+	/** Helper to trigger the interface calls safely */
+	void SetFocusedActor(AActor* NewActor);
 };
