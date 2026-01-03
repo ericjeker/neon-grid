@@ -24,15 +24,75 @@ bool UNeonInteractableComponent::TryInteract_Implementation(APawn* InstigatorPaw
 	}
 
 	// 1. Notify the Component's own Blueprint logic (if any)
-	OnInteracted(InstigatorPawn);
+	HandleInteract(InstigatorPawn);
 
 	// 2. Notify the Owning Actor (or anyone else listening)
 	OnInteractDelegate.Broadcast(InstigatorPawn);
 
-	return true; 
+	return true;
 }
 
-void UNeonInteractableComponent::OnInteracted_Implementation(APawn* InstigatorPawn)
+void UNeonInteractableComponent::HandleInteract_Implementation(APawn* InstigatorPawn)
 {
 	// Empty default implementation
+}
+
+void UNeonInteractableComponent::OnHoverBegin_Implementation()
+{
+	if (!bCanInteract)
+	{
+		return;
+	}
+
+	HandleHoverBegin();
+
+	OnHoverBeginDelegate.Broadcast();
+}
+
+void UNeonInteractableComponent::HandleHoverBegin_Implementation()
+{
+	const AActor* Owner = GetOwner();
+	if (!Owner)
+	{
+		return;
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("HoverBegin called on %s"), *Owner->GetName());
+	
+	// Default Behavior: Render CustomDepth (Outline)
+	if (UPrimitiveComponent* RootPrim = Cast<UPrimitiveComponent>(Owner->GetRootComponent()))
+	{
+		RootPrim->SetRenderCustomDepth(true);
+		RootPrim->SetCustomDepthStencilValue(1); 
+	}
+}
+
+void UNeonInteractableComponent::OnHoverEnd_Implementation()
+{
+	if (!bCanInteract)
+	{
+		return;
+	}
+
+	HandleHoverEnd();
+
+	OnHoverEndDelegate.Broadcast();
+}
+
+void UNeonInteractableComponent::HandleHoverEnd_Implementation()
+{
+	const AActor* Owner = GetOwner();
+	if (!Owner)
+	{
+		return;
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("HoverEnd called on %s"), *Owner->GetName());
+	
+	// Default Behavior: Remove CustomDepth
+	if (UPrimitiveComponent* RootPrim = Cast<UPrimitiveComponent>(Owner->GetRootComponent()))
+	{
+		RootPrim->SetRenderCustomDepth(false);
+		RootPrim->SetCustomDepthStencilValue(0); 
+	}
 }

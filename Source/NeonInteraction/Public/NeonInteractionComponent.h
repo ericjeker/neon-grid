@@ -38,10 +38,10 @@ public:
 	bool Interact(AActor* TargetActor);
 	
 protected:
-	/** The actor currently being highlighted */
+	/** The actor currently being hovered by the mouse cursor */
 	UPROPERTY(Transient)
-	AActor* CurrentFocusedActor;
+	AActor* CurrentHoveredActor;
 
 	/** Helper to trigger the interface calls safely */
-	void SetFocusedActor(AActor* NewActor);
+	void SetHoveredActor(AActor* NewActor);
 };

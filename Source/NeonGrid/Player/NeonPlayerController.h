@@ -61,7 +61,6 @@ private:
 	/** Input Handlers */
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void Interact(EAbilityInputID InputId);
 
 	/** GAS Input Handlers */
 	void AbilityPressed(EAbilityInputID InputId);

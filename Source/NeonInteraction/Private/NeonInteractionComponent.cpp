@@ -27,11 +27,11 @@ void UNeonInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if (AActor* ActorUnderCursor = GetInteractableUnderCursor(true))
 	{
 		// Update the focus state
-		SetFocusedActor(ActorUnderCursor);
+		SetHoveredActor(ActorUnderCursor);
 	}
 	else
 	{
-		SetFocusedActor(nullptr);
+		SetHoveredActor(nullptr);
 	}
 }
 
@@ -208,22 +208,26 @@ bool UNeonInteractionComponent::Interact(AActor* TargetActor)
 	return false;
 }
 
-void UNeonInteractionComponent::SetFocusedActor(AActor* NewActor)
+void UNeonInteractionComponent::SetHoveredActor(AActor* NewActor)
 {
 	// If the focus hasn't changed, do nothing
-	if (NewActor == CurrentFocusedActor)
+	if (NewActor == CurrentHoveredActor)
 	{
 		return;
 	}
 
 	// 1. Unhighlight the OLD actor
-	if (CurrentFocusedActor)
+	if (CurrentHoveredActor)
 	{
-		if (CurrentFocusedActor->Implements<UNeonInteractableInterface>())
+		if (CurrentHoveredActor->Implements<UNeonInteractableInterface>())
 		{
-			INeonInteractableInterface::Execute_Unhighlight(CurrentFocusedActor);
+			INeonInteractableInterface::Execute_OnHoverEnd(CurrentHoveredActor);
 		}
-		// Also handle the component case if needed...
+		else if (UActorComponent* InteractableComp = CurrentHoveredActor->FindComponentByInterface(
+			UNeonInteractableInterface::StaticClass()))
+		{
+			INeonInteractableInterface::Execute_OnHoverEnd(InteractableComp);
+		}
 	}
 
 	// 2. Highlight the NEW actor
@@ -231,10 +235,14 @@ void UNeonInteractionComponent::SetFocusedActor(AActor* NewActor)
 	{
 		if (NewActor->Implements<UNeonInteractableInterface>())
 		{
-			INeonInteractableInterface::Execute_Highlight(NewActor);
+			INeonInteractableInterface::Execute_OnHoverBegin(NewActor);
+		} else if (UActorComponent* InteractableComp = NewActor->FindComponentByInterface(
+			UNeonInteractableInterface::StaticClass()))
+		{
+			INeonInteractableInterface::Execute_OnHoverBegin(InteractableComp);
 		}
 	}
 
 	// 3. Update the reference
-	CurrentFocusedActor = NewActor;
+	CurrentHoveredActor = NewActor;
 }

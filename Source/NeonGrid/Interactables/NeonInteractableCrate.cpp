@@ -29,7 +29,7 @@ bool ANeonInteractableCrate::TryInteract_Implementation(APawn* InstigatorPawn)
 	return true;
 }
 
-void ANeonInteractableCrate::Highlight_Implementation()
+void ANeonInteractableCrate::OnHoverBegin_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Highlight called on %s"), *GetName());
 	
@@ -45,7 +45,7 @@ void ANeonInteractableCrate::Highlight_Implementation()
 	// You could also play a Timeline here or set a scalar parameter on a material.
 }
 
-void ANeonInteractableCrate::Unhighlight_Implementation()
+void ANeonInteractableCrate::OnHoverEnd_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Unhighlight called on %s"), *GetName());
 	

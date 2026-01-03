@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "NeonItemDefinition.h"
+#include "NeonItemInstance.h"
 #include "NeonInventoryTypes.generated.h"
 
 USTRUCT(BlueprintType)

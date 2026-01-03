@@ -22,11 +22,11 @@ class INeonInteractableInterface : public IInterface
 public:
 	/** Called when the interaction system finds this object (Hover start) */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Highlight();
+	void OnHoverBegin();
 
 	/** Called when the interaction system loses this object (Hover end) */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Unhighlight();
+	void OnHoverEnd();
 	
 	/** 
 	 * Validation function to know if the event can be called 

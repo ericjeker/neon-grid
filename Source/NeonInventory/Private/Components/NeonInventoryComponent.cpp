@@ -46,6 +46,7 @@ ENeonInventoryResult UNeonInventoryComponent::AddItem(UNeonItemInstance* Item, c
 	}
 
 	// Add the item to the inventory
+	// TODO: stack items if possible
 	InventoryContent.Add({Item, Quantity});
 
 	// Broadcast the inventory change event

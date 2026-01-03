@@ -17,8 +17,8 @@ public:
 	
 	// INeonInteractableInterface implementations
 	virtual bool TryInteract_Implementation(APawn* InstigatorPawn) override;
-	virtual void Highlight_Implementation() override;
-	virtual void Unhighlight_Implementation() override;
+	virtual void OnHoverBegin_Implementation() override;
+	virtual void OnHoverEnd_Implementation() override;
 
 protected:
 	/** 

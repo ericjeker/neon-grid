@@ -80,7 +80,7 @@ void ANeonPlayerController::SetupInputComponent()
 		if (InteractAction)
 		{
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this,
-			                                   &ANeonPlayerController::Interact, EAbilityInputID::Interact);
+			                                   &ANeonPlayerController::AbilityPressed, EAbilityInputID::Interact);
 		}
 	}
 }
@@ -143,17 +143,6 @@ void ANeonPlayerController::Look(const FInputActionValue& Value)
 	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
 		ControlledChar->Look(Value.Get<FVector2D>());
-	}
-}
-
-void ANeonPlayerController::Interact(EAbilityInputID InputId)
-{
-	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(GetPawn()))
-	{
-		if (UAbilitySystemComponent* ASC = ASCInterface->GetAbilitySystemComponent())
-		{
-			ASC->AbilityLocalInputPressed(static_cast<int32>(InputId));
-		}
 	}
 }
 

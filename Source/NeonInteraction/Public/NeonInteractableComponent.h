@@ -10,6 +10,9 @@
 // Declare the delegate signature (OneParam: The pawn who instigated)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNeonInteractSignature, APawn*, InstigatorPawn);
 
+// Declare a delegate signature for hover events (No params)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNeonHoverSignature);
+
 /**
  * Component that makes any Actor interactable.
  * Automatically implements INeonInteractableInterface and forwards calls to Blueprint or overrides.
@@ -29,6 +32,14 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FNeonInteractSignature OnInteractDelegate;
 
+	/** Called when the interaction system starts hovering over this object */
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FNeonHoverSignature OnHoverBeginDelegate;
+
+	/** Called when the interaction system stops hovering over this object */
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FNeonHoverSignature OnHoverEndDelegate;
+
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
@@ -43,10 +54,18 @@ protected:
 	 * attached to. 
 	 */
 	UFUNCTION(BlueprintNativeEvent, Category = "Interaction")
-	void OnInteracted(APawn* InstigatorPawn);
+	void HandleInteract(APawn* InstigatorPawn);
+	
+	UFUNCTION(BlueprintNativeEvent, Category = "Interaction")
+	void HandleHoverBegin();
+	
+	UFUNCTION(BlueprintNativeEvent, Category = "Interaction")
+	void HandleHoverEnd();
 
 public:
 	// INeonInteractableInterface implementation
 	virtual bool TryInteract_Implementation(APawn* InstigatorPawn) override;
+	virtual void OnHoverBegin_Implementation() override;
+	virtual void OnHoverEnd_Implementation() override;
 
 };
