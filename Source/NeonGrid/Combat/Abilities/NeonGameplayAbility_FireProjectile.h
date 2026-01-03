@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "FireProjectileAbility.generated.h"
+#include "NeonGameplayAbility_FireProjectile.generated.h"
 
 /**
  * Ability that spawns a projectile in front of the character.
  */
 UCLASS()
-class NEONGRID_API UFireProjectileAbility : public UGameplayAbility
+class NEONGRID_API UNeonGameplayAbility_FireProjectile : public UGameplayAbility
 {
 	GENERATED_BODY()
 	
 public:
-	UFireProjectileAbility();
+	UNeonGameplayAbility_FireProjectile();
 
 	/** The main entry point when the ability is triggered */
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,

@@ -1,17 +1,21 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "PlayerCharacter.h"
+#include "NeonPlayerCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "NeonGrid/Core/NeonGameplayTags.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Perception/AISense_Sight.h"
 
+#include "NeonInteractionComponent.h"
+#include "Components/NeonInventoryComponent.h"
+
+#include "NeonGrid/Core/NeonGameplayTags.h"
+
 // Sets default values
-APlayerCharacter::APlayerCharacter()
+ANeonPlayerCharacter::ANeonPlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -50,10 +54,17 @@ APlayerCharacter::APlayerCharacter()
 	UAIPerceptionStimuliSourceComponent* StimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSource"));
 	StimuliSource->RegisterForSense(UAISense_Sight::StaticClass());
 	StimuliSource->RegisterWithPerceptionSystem();
+
+	// Create Interaction Component
+	InteractionComponent = CreateDefaultSubobject<UNeonInteractionComponent>(TEXT("InteractionComponent"));
+
+	// Create inventory component
+	InventoryComponent = CreateDefaultSubobject<UNeonInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent->SetMaxWeightKg(25.0f);
 }
 
 // Called when the game starts or when spawned
-void APlayerCharacter::BeginPlay()
+void ANeonPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -61,7 +72,7 @@ void APlayerCharacter::BeginPlay()
 	AbilitySystemComponent->AddLooseGameplayTag(FNeonGameplayTags::Get().State_Invulnerable);
 }
 
-void APlayerCharacter::Move(const FVector2D& MovementVector)
+void ANeonPlayerCharacter::Move(const FVector2D& MovementVector)
 {
 	if (FollowCamera == nullptr) return;
 	
@@ -75,7 +86,7 @@ void APlayerCharacter::Move(const FVector2D& MovementVector)
 	AddMovementInput(RightDirection, MovementVector.X);
 }
 
-void APlayerCharacter::Look(const FVector2D& LookVector)
+void ANeonPlayerCharacter::Look(const FVector2D& LookVector)
 {
 	if (LookVector.IsNearlyZero()) return;
 

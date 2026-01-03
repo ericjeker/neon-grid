@@ -36,7 +36,8 @@ enum class EAbilityInputID : uint8
 	Ability1 UMETA(DisplayName = "Ability1"),
 	Ability2 UMETA(DisplayName = "Ability2"),
 	Sprint UMETA(DisplayName = "Sprint"),
-	Crouch UMETA(DisplayName = "Crouch")
+	Crouch UMETA(DisplayName = "Crouch"),
+	Interact UMETA(DisplayName = "Interact")
 };
 
 namespace NeonGridAIKeys

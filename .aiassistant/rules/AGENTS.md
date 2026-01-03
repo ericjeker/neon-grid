@@ -21,5 +21,6 @@ We will use Gameplay Ability System, Behavior Tree, Blueprint Native Events and 
 
 ## Code Conventions
 
+* All classes should be prefixed with `Neon` to avoid name collision.
 * Apply early returns (gates) as much as possible to avoid deeply nested operators.
 

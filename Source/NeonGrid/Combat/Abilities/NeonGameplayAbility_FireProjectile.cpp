@@ -1,12 +1,12 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 
-#include "FireProjectileAbility.h"
+#include "NeonGameplayAbility_FireProjectile.h"
 
 #include "GameFramework/Character.h"
 #include "NeonGrid/Combat/Projectiles/BaseProjectile.h"
 
-UFireProjectileAbility::UFireProjectileAbility()
+UNeonGameplayAbility_FireProjectile::UNeonGameplayAbility_FireProjectile()
 {
 	// Default settings (override from parent)
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
@@ -16,7 +16,7 @@ UFireProjectileAbility::UFireProjectileAbility()
 	// AbilityTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability.Weapon.Fire")));
 }
 
-void UFireProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+void UNeonGameplayAbility_FireProjectile::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
@@ -39,7 +39,7 @@ void UFireProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Ha
 	EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 }
 
-void UFireProjectileAbility::SpawnProjectile_Implementation()
+void UNeonGameplayAbility_FireProjectile::SpawnProjectile_Implementation()
 {
 	ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
 	const FGameplayAbilityActivationInfo ActivationInfo = GetCurrentActivationInfo();

@@ -7,7 +7,8 @@
 #include "NeonGameMode.generated.h"
 
 /**
- * 
+ * ANeonGameMode is a custom game mode for the NeonGrid game, inheriting from AGameMode.
+ * It handles the core gameplay systems such as wave progression and scoring mechanics.
  */
 UCLASS()
 class NEONGRID_API ANeonGameMode : public AGameMode

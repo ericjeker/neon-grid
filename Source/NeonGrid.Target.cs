@@ -11,5 +11,17 @@ public class NeonGridTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V6;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
 		ExtraModuleNames.Add("NeonGrid");
+		RegisterModules();
+		RegisterModulesCreatedByRider();
+	}
+
+	private void RegisterModules()
+	{
+		ExtraModuleNames.AddRange(["NeonInventory"]);
+	}
+
+	private void RegisterModulesCreatedByRider()
+	{
+		ExtraModuleNames.AddRange(new string[] { "NeonInteraction" });
 	}
 }
