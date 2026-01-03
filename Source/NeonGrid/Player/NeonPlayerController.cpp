@@ -123,7 +123,11 @@ void ANeonPlayerController::Tick(float DeltaTime)
 
 			if (!LookDir.IsNearlyZero())
 			{
-				ControlledChar->SetActorRotation(LookDir.Rotation());
+				const FRotator TargetRotation = LookDir.Rotation();
+				const FRotator CurrentRotation = ControlledChar->GetActorRotation();
+
+				const FRotator NewRotation = FMath::RInterpTo(CurrentRotation, TargetRotation, DeltaTime, MouseRotationSpeed);
+				ControlledChar->SetActorRotation(NewRotation);
 			}
 		}
 	}

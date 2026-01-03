@@ -56,6 +56,10 @@ protected:
 	/** Interact Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* InteractAction;
+	
+	/** Speed at which the character rotates towards the mouse cursor (interp speed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controls")
+	float MouseRotationSpeed = 10.0f;
 
 private:
 	/** Input Handlers */
