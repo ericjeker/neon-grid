@@ -7,7 +7,7 @@
 #include "NeonInteractionComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Interaction), meta=(BlueprintSpawnableComponent))
+UCLASS(Blueprintable, ClassGroup=(Interaction), meta=(BlueprintSpawnableComponent))
 class NEONINTERACTION_API UNeonInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()

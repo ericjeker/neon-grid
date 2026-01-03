@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNeonHoverSignature);
  * Component that makes any Actor interactable.
  * Automatically implements INeonInteractableInterface and forwards calls to Blueprint or overrides.
  */
-UCLASS(ClassGroup=(Interaction), meta=(BlueprintSpawnableComponent))
+UCLASS(Blueprintable, ClassGroup=(Interaction), meta=(BlueprintSpawnableComponent))
 class NEONINTERACTION_API UNeonInteractableComponent : public UActorComponent, public INeonInteractableInterface
 {
 	GENERATED_BODY()
