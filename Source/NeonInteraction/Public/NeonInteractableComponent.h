@@ -36,7 +36,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FNeonHoverSignature OnHoverBeginDelegate;
 
-	/** Called when the interaction system stops hovering over this object */
+	/** Called when the interaction system stops hovering away from this object */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FNeonHoverSignature OnHoverEndDelegate;
 
