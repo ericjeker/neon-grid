@@ -10,7 +10,7 @@
 UBTService_UpdateLastKnownLocation::UBTService_UpdateLastKnownLocation()
 {
 	NodeName = "Update Last Known Location";
-	Interval = 0.5f; // Update twice per second
+	Interval = 0.1f; // Update twice per second
 	RandomDeviation = 0.1f;
 }
 
