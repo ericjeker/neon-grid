@@ -106,12 +106,14 @@ void UNeonLoadoutComponent::SetActiveSlot(ENeonEquipmentSlot Slot)
 
 void UNeonLoadoutComponent::CycleEquipmentSlot()
 {
-	if (CurrentSlotIndex == ENeonEquipmentSlot::Primary)
+	if (CurrentSlotIndex == ENeonEquipmentSlot::Primary && EquipmentMap.FindRef(ENeonEquipmentSlot::Secondary))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("CycleEquipmentSlot: Switching to Secondary!"));
 		SetActiveSlot(ENeonEquipmentSlot::Secondary);
 	}
-	else if (CurrentSlotIndex == ENeonEquipmentSlot::Secondary)
+	else if (CurrentSlotIndex == ENeonEquipmentSlot::Secondary && EquipmentMap.FindRef(ENeonEquipmentSlot::Primary))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("CycleEquipmentSlot: Switching to Primary!"));
 		SetActiveSlot(ENeonEquipmentSlot::Primary);
 	}
 }
@@ -124,10 +126,10 @@ void UNeonLoadoutComponent::StartFire()
 	}
 }
 
-void UNeonLoadoutComponent::StartReload()
+void UNeonLoadoutComponent::StopFire()
 {
 	if (ANeonEquipment* CurrentEquipment = GetCurrentEquipment())
 	{
-		// CurrentEquipment->Reload();
+		CurrentEquipment->StopPrimaryAction();
 	}
 }

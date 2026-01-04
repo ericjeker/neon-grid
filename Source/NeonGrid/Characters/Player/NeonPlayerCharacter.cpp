@@ -64,8 +64,7 @@ ANeonPlayerCharacter::ANeonPlayerCharacter()
 	InventoryComponent->SetMaxWeightKg(25.0f);
 	
 	// Create equipment component
-	EquipmentComponent = CreateDefaultSubobject<UNeonLoadoutComponent>(TEXT("EquipmentComponent"));
-	
+	LoadoutComponent = CreateDefaultSubobject<UNeonLoadoutComponent>(TEXT("LoadoutComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -75,6 +74,19 @@ void ANeonPlayerCharacter::BeginPlay()
 	
 	// Make the player invulnerable (for testing purpose)
 	AbilitySystemComponent->AddLooseGameplayTag(FNeonGameplayTags::Get().State_Invulnerable);
+	
+	if (StartingWeaponDefinition && LoadoutComponent)
+	{
+		// 1. Create the Instance (Data)
+		UNeonItemInstance* NewInstance = NewObject<UNeonItemInstance>(this);
+		NewInstance->ItemDef = StartingWeaponDefinition;
+		
+		// 2. Equip it to the Primary Slot
+		LoadoutComponent->EquipItem(NewInstance, ENeonEquipmentSlot::Primary);
+		
+		// 3. Ensure the slot is active so it spawns immediately
+		LoadoutComponent->SetActiveSlot(ENeonEquipmentSlot::Primary);
+	}
 }
 
 void ANeonPlayerCharacter::Move(const FVector2D& MovementVector)

@@ -9,6 +9,10 @@
 class UNeonItemInstance;
 class ANeonEquipment;
 
+/**
+ * Component responsible for managing the player's loadout, including equipping items,
+ * switching active slots, and handling the functionality of weapons and equipment.
+ */
 UCLASS()
 class NEONLOADOUT_API UNeonLoadoutComponent : public UActorComponent
 {
@@ -16,12 +20,6 @@ class NEONLOADOUT_API UNeonLoadoutComponent : public UActorComponent
 	
 public:
 	UNeonLoadoutComponent();
-	
-	UPROPERTY()
-	ENeonEquipmentSlot CurrentSlotIndex = ENeonEquipmentSlot::Primary;
-	
-	UPROPERTY()
-	TMap<ENeonEquipmentSlot, ANeonEquipment*> EquipmentMap;
 	
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
 	void EquipItem(UNeonItemInstance* ItemInstance, ENeonEquipmentSlot Slot);
@@ -45,8 +43,16 @@ public:
 	void StartFire();
 	
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
-	void StartReload();
-
+	void StopFire();
+	
 protected:
 	virtual void BeginPlay() override;
+	
+private:
+	UPROPERTY()
+	ENeonEquipmentSlot CurrentSlotIndex = ENeonEquipmentSlot::Primary;
+	
+	UPROPERTY()
+	TMap<ENeonEquipmentSlot, ANeonEquipment*> EquipmentMap;
+	
 };

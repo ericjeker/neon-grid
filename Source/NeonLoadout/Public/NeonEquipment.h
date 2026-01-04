@@ -7,7 +7,7 @@
 #include "NeonEquipment.generated.h"
 
 
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class NEONLOADOUT_API ANeonEquipment : public AActor
 {
 	GENERATED_BODY()
@@ -25,14 +25,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
 	void Unequip();
 	
-	UFUNCTION(BlueprintCallable, Category = "Loadout")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Loadout")
 	void StartPrimaryAction();
+	virtual void StartPrimaryAction_Implementation();
 	
-	UFUNCTION(BlueprintCallable, Category = "Loadout")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Loadout")
 	void StopPrimaryAction();
-	
+	virtual void StopPrimaryAction_Implementation();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USkeletalMeshComponent* EquipmentMesh;
+	
 };

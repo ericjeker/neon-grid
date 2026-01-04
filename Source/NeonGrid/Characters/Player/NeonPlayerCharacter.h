@@ -63,5 +63,9 @@ protected:
 	class UNeonInventoryComponent* InventoryComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Loadout")
-	class UNeonLoadoutComponent* EquipmentComponent;
+	class UNeonLoadoutComponent* LoadoutComponent;
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Loadout")
+	TObjectPtr<class UNeonItemDefinition> StartingWeaponDefinition;
 };
