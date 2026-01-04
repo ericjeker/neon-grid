@@ -32,12 +32,13 @@ enum class EAbilityInputID : uint8
 	None UMETA(DisplayName = "None"),
 	Confirm UMETA(DisplayName = "Confirm"),
 	Cancel UMETA(DisplayName = "Cancel"),
-	Fire UMETA(DisplayName = "Fire"),
-	Ability1 UMETA(DisplayName = "Ability1"),
-	Ability2 UMETA(DisplayName = "Ability2"),
+	Interact UMETA(DisplayName = "Interact"),
+	/* Movement */
 	Sprint UMETA(DisplayName = "Sprint"),
 	Crouch UMETA(DisplayName = "Crouch"),
-	Interact UMETA(DisplayName = "Interact")
+	/* Equipment */
+	Fire UMETA(DisplayName = "Fire"),
+	Cycle UMETA(DisplayName = "Cycle")
 };
 
 namespace NeonGridAIKeys

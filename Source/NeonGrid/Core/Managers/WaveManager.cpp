@@ -1,10 +1,10 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
-
 #include "WaveManager.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "NeonGrid/Combat/Components/HealthComponent.h"
+
+#include "NeonGrid/Characters/Components/HealthComponent.h"
 #include "NeonGrid/Core/NeonGameMode.h"
 #include "NeonGrid/Core/NeonGameState.h"
 

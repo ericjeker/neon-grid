@@ -1,0 +1,76 @@
+﻿#pragma once
+
+#include "CoreMinimal.h"
+
+#include "GameFramework/PlayerController.h"
+#include "NeonGrid/Core/NeonGridEnums.h"
+
+#include "NeonPlayerController.generated.h"
+
+// Forward declarations
+class UInputMappingContext;
+class UInputAction;
+class UUserWidget;
+struct FInputActionValue;
+
+/** Custom player controller for the NeonGrid game */
+UCLASS()
+class NEONGRID_API ANeonPlayerController : public APlayerController
+{
+	GENERATED_BODY()
+
+public:
+	ANeonPlayerController();
+
+	// Override to setup input bindings
+	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaTime) override;
+
+protected:
+	virtual void BeginPlay() override;
+
+	/** The Widget class we want to use for our HUD */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+
+	/** The actual instance of the HUD */
+	UPROPERTY()
+	UUserWidget* HUDWidgetInstance;
+
+	/** Input Mapping Context to be used for player input */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	/** Look Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* LookAction;
+
+	/** Interact Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* InteractAction;
+	
+	/** Fire Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* FireAction;
+	
+	/** Cycle Equipment Slots */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	UInputAction* CycleEquipmentSlotAction;
+	
+	/** Speed at which the character rotates towards the mouse cursor (interp speed) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controls")
+	float MouseRotationSpeed = 10.0f;
+
+private:
+	/** Input Handlers */
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+	/** GAS Input Handlers */
+	void AbilityPressed(EAbilityInputID InputId);
+	void AbilityReleased(EAbilityInputID InputId);
+};

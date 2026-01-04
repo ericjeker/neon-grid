@@ -1,5 +1,6 @@
 ﻿#include "Misc/AutomationTest.h"
-#include "NeonGrid/NPCs/Behaviors/Patrol/PatrolPointsComponent.h"
+#include "NeonGrid/Characters/NPCs/Behaviors/Patrol/PatrolPointsComponent.h"
+
 
 // Parameters: (ClassName, "Pretty.Path.In.Test.UI", Flags)
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FPatrolPointsComponentTest, "NeonGrid.Components.PatrolPointsComponent", EAutomationTestFlags::EditorContext | EAutomationTestFlags::ProductFilter)
