@@ -22,7 +22,7 @@ void UCoreAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 }
 
-void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+void UCoreAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 
@@ -36,13 +36,12 @@ void UCoreAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	}
 }
 
-void UCoreAttributeSet::ExecuteDamageEffect(const struct FGameplayEffectModCallbackData& Data)
+void UCoreAttributeSet::ExecuteDamageEffect(const FGameplayEffectModCallbackData& Data)
 {
 	if (!GetOwningActor()) return;
 
 	// Check for the Invulnerable tag on the target (the owner of this AttributeSet)
-	const FGameplayTag InvulnerableTag = FNeonGameplayTags::Get().State_Invulnerable;
-	if (Data.Target.HasMatchingGameplayTag(InvulnerableTag))
+	if (Data.Target.HasMatchingGameplayTag(NeonGameplayTags::State_Invulnerable))
 	{
 		SetDamage(0.f);
 		UE_LOG(LogTemp, Warning, TEXT("Damage effect ignored on %s because it is Invulnerable!"),

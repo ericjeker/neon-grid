@@ -5,6 +5,7 @@
 
 #include "NeonEquipment.h"
 #include "NeonLoadoutComponent.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 UNeonGameplayAbility_FireEquipment::UNeonGameplayAbility_FireEquipment()
 {
@@ -25,7 +26,7 @@ void UNeonGameplayAbility_FireEquipment::ActivateAbility(const FGameplayAbilityS
 		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 		return;
 	}
-
+	
 	// 1. Get the Avatar (Character/Pawn)
 	const AActor* AvatarActor = ActorInfo->AvatarActor.Get();
 	if (!AvatarActor)

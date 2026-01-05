@@ -3,6 +3,7 @@
 
 #include "NeonPlayerController.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -77,10 +78,10 @@ void ANeonPlayerController::SetupInputComponent()
 		}
 
 		// Bind Cycle Equipment Slot
-		if (CycleEquipmentSlotAction)
+		if (CycleEquipmentAction)
 		{
-			EnhancedInputComponent->BindAction(CycleEquipmentSlotAction, ETriggerEvent::Triggered, this,
-			                                   &ANeonPlayerController::AbilityPressed, EAbilityInputID::Cycle);
+			EnhancedInputComponent->BindAction(CycleEquipmentAction, ETriggerEvent::Triggered, this,
+			                                   &ANeonPlayerController::CycleEquipment);
 		}
 
 		// Bind Interact
@@ -155,6 +156,32 @@ void ANeonPlayerController::Look(const FInputActionValue& Value)
 	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
 		ControlledChar->Look(Value.Get<FVector2D>());
+	}
+}
+
+void ANeonPlayerController::CycleEquipment(const FInputActionValue& Value)
+{
+	const float AxisValue = Value.Get<float>();
+
+	// Filter out nearly zero noise
+	if (FMath::IsNearlyZero(AxisValue))
+	{
+		return;
+	}
+
+	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
+	{
+		// Create the payload
+		FGameplayEventData Payload;
+		Payload.EventMagnitude = (AxisValue > 0) ? 1.0f : -1.0f;
+		Payload.Instigator = this;
+		Payload.Target = ControlledChar;
+
+		// Send the event.
+		// Note: You must define this tag in your project (e.g. DefaultGameplayTags.ini or via Asset Manager)
+		const FGameplayTag CycleTag = FGameplayTag::RequestGameplayTag(FName("Input.Action.Cycle"));
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(ControlledChar, CycleTag, Payload);
 	}
 }
 

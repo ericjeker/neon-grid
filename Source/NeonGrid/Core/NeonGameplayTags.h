@@ -3,22 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
 
 /**
- * Singleton containing native Gameplay Tags
+ * Native Gameplay Tags defined via macros.
+ * These are automatically registered during engine startup.
  */
-struct FNeonGameplayTags
+namespace NeonGameplayTags
 {
-public:
-	static const FNeonGameplayTags& Get() { return GameplayTags; }
-
-	static void InitializeNativeTags();
-
-	// Tag for God Mode / Invulnerability
-	FGameplayTag State_Invulnerable;
-
-protected:
-private:
-	static FNeonGameplayTags GameplayTags;
-};
+	// Declare the tags as external variables in this namespace
+	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Invulnerable);
+	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Dead);
+	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_Fire);
+}

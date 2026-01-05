@@ -59,7 +59,7 @@ protected:
 	
 	/** Cycle Equipment Slots */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
-	UInputAction* CycleEquipmentSlotAction;
+	UInputAction* CycleEquipmentAction;
 	
 	/** Speed at which the character rotates towards the mouse cursor (interp speed) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controls")
@@ -69,6 +69,7 @@ private:
 	/** Input Handlers */
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void CycleEquipment(const FInputActionValue& Value);
 
 	/** GAS Input Handlers */
 	void AbilityPressed(EAbilityInputID InputId);

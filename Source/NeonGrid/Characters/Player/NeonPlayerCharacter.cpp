@@ -73,7 +73,7 @@ void ANeonPlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	// Make the player invulnerable (for testing purpose)
-	AbilitySystemComponent->AddLooseGameplayTag(FNeonGameplayTags::Get().State_Invulnerable);
+	AbilitySystemComponent->AddLooseGameplayTag(NeonGameplayTags::State_Invulnerable);
 	
 	if (StartingWeaponDefinition && LoadoutComponent)
 	{

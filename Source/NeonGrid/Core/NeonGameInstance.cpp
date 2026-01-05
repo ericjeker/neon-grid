@@ -7,7 +7,4 @@
 void UNeonGameInstance::Init()
 {
 	Super::Init();
-
-	// Initialize our native gameplay tags
-	FNeonGameplayTags::InitializeNativeTags();
 }

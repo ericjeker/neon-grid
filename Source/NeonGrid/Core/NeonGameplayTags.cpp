@@ -1,16 +1,11 @@
 ﻿// Copyright Eric Jeker, Inc. All Rights Reserved.
 
 #include "NeonGameplayTags.h"
-#include "GameplayTagsManager.h"
 
-FNeonGameplayTags FNeonGameplayTags::GameplayTags;
-
-void FNeonGameplayTags::InitializeNativeTags()
+namespace NeonGameplayTags
 {
-	UGameplayTagsManager& Manager = UGameplayTagsManager::Get();
-
-	GameplayTags.State_Invulnerable = Manager.AddNativeGameplayTag(
-		FName("State.Invulnerable"),
-		FString("Status tag indicating an actor is God-like and takes no damage")
-	);
+	// Define the tags. The 2nd argument is the actual tag string in the editor.
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Invulnerable, "State.Invulnerable", "Status tag indicating an actor is God-like and takes no damage");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(State_Dead, "State.Dead", "Status tag indicating an actor is dead");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Action_Fire, "Input.Action.Fire", "Input tag for Fire");
 }
