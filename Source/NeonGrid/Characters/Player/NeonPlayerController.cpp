@@ -48,27 +48,31 @@ void ANeonPlayerController::BeginPlay()
 	}
 }
 
+/**
+ * InputAction can either be native or ability-based. Native actions bypass the GAS pipeline, don't check for tags
+ * or cost or cooldowns. The ability actions go through the GAS pipeline using gameplay tags.
+ */
 void ANeonPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		// Bind Movement
+		// Bind Movement (native)
 		if (MoveAction)
 		{
 			EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this,
 			                                   &ANeonPlayerController::Move);
 		}
 
-		// Bind Look
+		// Bind Look (native)
 		if (LookAction)
 		{
 			EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this,
 			                                   &ANeonPlayerController::Look);
 		}
 
-		// Bind Fire
+		// Bind Fire (ability)
 		if (FireAction)
 		{
 			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this,
@@ -77,7 +81,7 @@ void ANeonPlayerController::SetupInputComponent()
 			                                   &ANeonPlayerController::AbilityReleased, EAbilityInputID::Fire);
 		}
 
-		// Bind Cycle Equipment Slot
+		// Bind Cycle Equipment Slot (event-based)
 		if (CycleEquipmentAction)
 		{
 			EnhancedInputComponent->BindAction(CycleEquipmentAction, ETriggerEvent::Triggered, this,
@@ -89,6 +93,8 @@ void ANeonPlayerController::SetupInputComponent()
 		{
 			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this,
 			                                   &ANeonPlayerController::AbilityPressed, EAbilityInputID::Interact);
+			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this,
+			                                   &ANeonPlayerController::AbilityReleased, EAbilityInputID::Interact);
 		}
 	}
 }
@@ -162,7 +168,7 @@ void ANeonPlayerController::Look(const FInputActionValue& Value)
 void ANeonPlayerController::CycleEquipment(const FInputActionValue& Value)
 {
 	const float AxisValue = Value.Get<float>();
-
+	
 	// Filter out nearly zero noise
 	if (FMath::IsNearlyZero(AxisValue))
 	{
@@ -171,15 +177,16 @@ void ANeonPlayerController::CycleEquipment(const FInputActionValue& Value)
 
 	if (ANeonPlayerCharacter* ControlledChar = Cast<ANeonPlayerCharacter>(GetPawn()))
 	{
-		// Create the payload
+		// Create the gameplay event payload
 		FGameplayEventData Payload;
+		// This will tell if we cycle the next or previous equipment
 		Payload.EventMagnitude = (AxisValue > 0) ? 1.0f : -1.0f;
 		Payload.Instigator = this;
 		Payload.Target = ControlledChar;
 
 		// Send the event.
 		// Note: You must define this tag in your project (e.g. DefaultGameplayTags.ini or via Asset Manager)
-		const FGameplayTag CycleTag = FGameplayTag::RequestGameplayTag(FName("Input.Action.Cycle"));
+		const FGameplayTag CycleTag = FGameplayTag::RequestGameplayTag(FName("Input.Action.CycleEquipment"));
 
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(ControlledChar, CycleTag, Payload);
 	}

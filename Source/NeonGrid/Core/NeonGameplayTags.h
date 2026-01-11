@@ -14,5 +14,6 @@ namespace NeonGameplayTags
 	// Declare the tags as external variables in this namespace
 	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Invulnerable);
 	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Dead);
-	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_Fire);
+	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_FireEquipment);
+	NEONGRID_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Action_CycleEquipment);
 }

@@ -75,18 +75,8 @@ void ANeonPlayerCharacter::BeginPlay()
 	// Make the player invulnerable (for testing purpose)
 	AbilitySystemComponent->AddLooseGameplayTag(NeonGameplayTags::State_Invulnerable);
 	
-	if (StartingWeaponDefinition && LoadoutComponent)
-	{
-		// 1. Create the Instance (Data)
-		UNeonItemInstance* NewInstance = NewObject<UNeonItemInstance>(this);
-		NewInstance->ItemDef = StartingWeaponDefinition;
-		
-		// 2. Equip it to the Primary Slot
-		LoadoutComponent->EquipItem(NewInstance, ENeonEquipmentSlot::Primary);
-		
-		// 3. Ensure the slot is active so it spawns immediately
-		LoadoutComponent->SetActiveSlot(ENeonEquipmentSlot::Primary);
-	}
+	// Load the primary and secondary weapons
+	LoadoutComponent->InitializeStartingLoadout();
 }
 
 void ANeonPlayerCharacter::Move(const FVector2D& MovementVector)

@@ -6,6 +6,7 @@
 #include "NeonLoadoutComponent.generated.h"
 
 // Forward declarations
+class UNeonItemDefinition;
 class UNeonItemInstance;
 class ANeonEquipment;
 
@@ -29,12 +30,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
 	void SetActiveSlot(ENeonEquipmentSlot Slot);
+	
+	UFUNCTION(BlueprintCallable, Category = "Loadout")
+	void InitializeStartingLoadout();
 
 	/**
 	 * Scroll between Primary and Secondary weapons
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Loadout")
-	void CycleEquipmentSlot();
+	void CycleEquipmentSlot(float Direction);
 
 	/**
 	 * Will fire the currently active weapon
@@ -47,6 +51,12 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Loadout")
+	TObjectPtr<UNeonItemDefinition> StartingPrimaryWeaponDefinition;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Loadout")
+	TObjectPtr<UNeonItemDefinition> StartingSecondaryWeaponDefinition;
 	
 private:
 	UPROPERTY()

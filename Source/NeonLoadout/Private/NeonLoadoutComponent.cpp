@@ -25,12 +25,11 @@ void UNeonLoadoutComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 void UNeonLoadoutComponent::EquipItem(UNeonItemInstance* ItemInstance, const ENeonEquipmentSlot Slot)
 {
-	if (!ItemInstance) return;
+	if (!ItemInstance) { return; }
 
 	// 1. Get the Equippable Fragment from the item
 	const UNeonItemFragment_Equippable* EquipFragment = ItemInstance->FindFragment<UNeonItemFragment_Equippable>();
@@ -45,18 +44,21 @@ void UNeonLoadoutComponent::EquipItem(UNeonItemInstance* ItemInstance, const ENe
 		OldItem->Destroy();
 		EquipmentMap.Remove(Slot);
 	}
-	
+
 	// 3. Spawn the new Equipment Actor
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = GetOwner();
 	SpawnParams.Instigator = Cast<APawn>(GetOwner());
 
-	if (ANeonEquipment* NewEquipment = GetWorld()->SpawnActor<ANeonEquipment>(EquipFragment->EquipmentClass, SpawnParams))
+	if (ANeonEquipment* NewEquipment = GetWorld()->SpawnActor<ANeonEquipment>(
+		EquipFragment->EquipmentClass, SpawnParams))
 	{
 		// 4. Attach to Character Mesh
 		if (ACharacter* CharOwner = Cast<ACharacter>(GetOwner()))
 		{
-			NewEquipment->AttachToComponent(CharOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipFragment->AttachmentSocket);
+			NewEquipment->AttachToComponent(CharOwner->GetMesh(),
+			                                FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+			                                EquipFragment->AttachmentSocket);
 			NewEquipment->SetActorRelativeTransform(EquipFragment->AttachmentOffset);
 		}
 
@@ -74,7 +76,6 @@ void UNeonLoadoutComponent::EquipItem(UNeonItemInstance* ItemInstance, const ENe
 			NewEquipment->SetActorEnableCollision(false);
 		}
 	}
-
 }
 
 void UNeonLoadoutComponent::SetActiveSlot(ENeonEquipmentSlot Slot)
@@ -83,7 +84,7 @@ void UNeonLoadoutComponent::SetActiveSlot(ENeonEquipmentSlot Slot)
 	{
 		return;
 	}
-	
+
 	// 1. Unequip/Hide the old item
 	if (ANeonEquipment* OldItem = GetCurrentEquipment())
 	{
@@ -104,7 +105,34 @@ void UNeonLoadoutComponent::SetActiveSlot(ENeonEquipmentSlot Slot)
 	}
 }
 
-void UNeonLoadoutComponent::CycleEquipmentSlot()
+void UNeonLoadoutComponent::InitializeStartingLoadout()
+{
+	if (StartingPrimaryWeaponDefinition)
+	{
+		// 1. Create the Instance (Data)
+		UNeonItemInstance* NewInstance = NewObject<UNeonItemInstance>(this);
+		NewInstance->ItemDef = StartingPrimaryWeaponDefinition;
+
+		// 2. Equip it to the Primary Slot
+		EquipItem(NewInstance, ENeonEquipmentSlot::Primary);
+
+		// 3. Ensure the slot is active so it spawns immediately
+		SetActiveSlot(ENeonEquipmentSlot::Primary);
+	}
+
+	if (StartingSecondaryWeaponDefinition)
+	{
+		// 1. Create the Instance (Data)
+		UNeonItemInstance* NewInstance = NewObject<UNeonItemInstance>(this);
+		NewInstance->ItemDef = StartingSecondaryWeaponDefinition;
+
+		// 2. Equip it to the Primary Slot
+		EquipItem(NewInstance, ENeonEquipmentSlot::Secondary);
+	}
+}
+
+// TODO: Implement Direction properly, but for now we only want to make it work with 2 weapons
+void UNeonLoadoutComponent::CycleEquipmentSlot(const float Direction)
 {
 	if (CurrentSlotIndex == ENeonEquipmentSlot::Primary && EquipmentMap.FindRef(ENeonEquipmentSlot::Secondary))
 	{
@@ -115,6 +143,10 @@ void UNeonLoadoutComponent::CycleEquipmentSlot()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("CycleEquipmentSlot: Switching to Primary!"));
 		SetActiveSlot(ENeonEquipmentSlot::Primary);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CycleEquipmentSlot: No equipment slot available!"));
 	}
 }
 
